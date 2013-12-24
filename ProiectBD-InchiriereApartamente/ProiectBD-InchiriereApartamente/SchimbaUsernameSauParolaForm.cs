@@ -120,5 +120,10 @@ namespace ProiectBD_InchiriereApartamente
                     this.Close();
             }
         }
+
+        private void SchimbaUsernameSauParolaForm_Load(object sender, EventArgs e)
+        {
+
+        }
     }
 }

@@ -262,6 +262,7 @@
             this.Margin = new System.Windows.Forms.Padding(4);
             this.Name = "SchimbaUsernameSauParolaForm";
             this.Text = "Schimba Username sau Parola";
+            this.Load += new System.EventHandler(this.SchimbaUsernameSauParolaForm_Load);
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
             this.ResumeLayout(false);
