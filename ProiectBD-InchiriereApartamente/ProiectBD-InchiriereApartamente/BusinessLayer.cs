@@ -7,15 +7,21 @@ using System.Data.SqlClient;
 using System.Data;
 using System.Windows.Forms;
 
+using System.IO;
+using iTextSharp;
+using iTextSharp.text;
+using iTextSharp.text.pdf;
+
+
 namespace ProiectBD_InchiriereApartamente
 {
     class BusinessLayer
     {
-      static  int[] filter_adress = new int[200];
-      static  int inc_add;
-      static int[] filter_apartament = new int[200];
-       static int inc_app;
-        public static int start;
+        int[] filter_adress = new int[200];       //idu-rile de la adrese retinute dupa filtrarea
+        int inc_add;  //nr de elemente din vectorul filter_adress
+       int[] filter_apartament = new int[200];    
+        int inc_app;
+        public  int start;
         DataLayer dl = new DataLayer();
 
         public string Encrypt(string password)
@@ -132,9 +138,10 @@ namespace ProiectBD_InchiriereApartamente
             return m;
         }
 
-        public void filter_datagridview(DataGridView m, string f, string g, string h, string i, string h1, string h2, string h3, string h4, string h5, bool oc, int option, int start,int rsd)
+        //intru in functia asta de fiecare data cand se modifca textul din filtre
+        public void filter_datagridview(DataGridView m, string f, string g, string h, string i, string h1, string h2, string h3, string h4, string h5, bool ocupat, int option, int start,int rsd)
         {
-            if (option == 1)
+            if (option == 1)    //tabel adrese
             {
                 DataTable y = new DataTable();
                 DataTable u = new DataTable();
@@ -146,42 +153,56 @@ namespace ProiectBD_InchiriereApartamente
                 int w = u.Rows.Count;
                 int r = t.Rows.Count;
 
-                int a = 0;
-                int[] o = new int[200];
-                for (int k = 0; k < r; k++)
+                //Formez lista de apartamente ocupate
+                int a = 0;  //nr de id-uri comune
+                int[] o = new int[200]; 
+                for (int k = 0; k < r; k++) //indicele randului din apartamente
                 {
-                    for (int l = 0; l < w; l++)
-                        if (Int32.Parse(t.Rows[k][0].ToString()) == Int32.Parse(u.Rows[l][1].ToString()))
+                    for (int l = 0; l < w; l++) //indicele randului din Clienti
+                        if (u.Rows[l][1] != DBNull.Value)
                         {
-                            o[a] = new int();
-                            o[a] = Int32.Parse(t.Rows[k][1].ToString());
-                            a++;
+                            if (Int32.Parse(t.Rows[k][0].ToString()) == Int32.Parse(u.Rows[l][1].ToString()))
+                            {
+                                o[a] = new int();
+                                o[a] = Int32.Parse(t.Rows[k][0].ToString());
+                                a++;
+                                break;
+                            }
                         }
                 }
-                if (oc == false)
+                if (ocupat == false)    //afisez apartamentele libere
                 {
-                    for (int q = 0; q < j; q++)
+                    //parcurg lista de apartamente ocupate,si afisez apartamentele libere
+                    for (int q = 0; q < y.Rows.Count; q++)
                     {
                         for (int n = 0; n < a; n++)
-                            if (Int32.Parse(y.Rows[q][0].ToString()) == o[n])
-                                y.Rows[q].Delete();
+                            if(y.Rows.Count>0)
+                                if (Int32.Parse(y.Rows[q][0].ToString()) == o[n])
+                                {
+                                    y.Rows[q].Delete();
+                                    y.AcceptChanges();
+                                }
                     }
                 }
+                            //vreau sa afisez apartamentele ocupate
                 else
                 {
-                    for (int q = 0; q < j; q++)
+                    for (int q = 0; q < y.Rows.Count; q++)
                     {
                         bool ok = false;
                         for (int n = 0; n < a; n++)
                             if (Int32.Parse(y.Rows[q][0].ToString()) == o[n])
                                 ok = true;
-                        if (ok == false)
+                        if (ok == false)    //daca id-ul este pt un apartament liber il sterg din lista
+                        {
                             y.Rows[q].Delete();
+                            y.AcceptChanges();
+                        }
                     }
                 }
-                 if (Math.Max(inc_app, inc_add) >= 0)
-                {
-                    if (BusinessLayer.start == 1 && Math.Min(inc_add, inc_app) == 0)
+                 if (Math.Max(inc_app, inc_add) >= 0)   //e degeaba
+                {                                                                     //pt option = 1 : ma aflu in adrese
+                    if (start == 1 && Math.Min(inc_add, inc_app) == 0)    //se afla ceva in filtre dar un filtru face sa nu corespunda nimic cu val din filtru
                     {
                         DataView filter = new DataView(y);
                         filter.RowFilter = string.Format("ORAS LIKE '{0}*' AND STRADA LIKE '{1}*' AND SECTOR LIKE '{2}*' AND ETAJ LIKE '{3}*'", f, g, h, i);
@@ -201,7 +222,7 @@ namespace ProiectBD_InchiriereApartamente
                     }
                     else
                     {
-                        BusinessLayer.start = 1;
+                        start = 1;   
 
                         
                         for (int k = 0; k < inc_add; k++)
@@ -213,7 +234,7 @@ namespace ProiectBD_InchiriereApartamente
                             if (decise == false)
                             {
                                 int p = y.Rows.Count;
-                                for (int aa = 0; aa < p; aa++)
+                                for (int aa = 0; aa < y.Rows.Count; aa++)
                                 {
                                     try
                                     {
@@ -221,6 +242,7 @@ namespace ProiectBD_InchiriereApartamente
                                         {
 
                                             y.Rows[aa].Delete();
+                                            y.AcceptChanges();
                                             j--;
                                             aa--;
                                         }
@@ -238,7 +260,7 @@ namespace ProiectBD_InchiriereApartamente
                         if (rsd == 1)
                         {
                             int pp = y.Rows.Count;
-                            for (int aa = 0; aa < pp; aa++)
+                            for (int aa = 0; aa < y.Rows.Count; aa++)
                             {
                                 bool sterg = false;
                                 try
@@ -251,7 +273,7 @@ namespace ProiectBD_InchiriereApartamente
                                     if (sterg == false)
                                     {
                                         y.Rows[aa].Delete();
-
+                                        y.AcceptChanges();
                                         j--;
                                         aa--;
                                     }
@@ -297,54 +319,65 @@ namespace ProiectBD_InchiriereApartamente
                 for (int k = 0; k < r; k++)
                 {
                     for (int l = 0; l < w; l++)
-                        if (Int32.Parse(t.Rows[k][0].ToString()) == Int32.Parse(u.Rows[l][1].ToString()))
+                        if (u.Rows[l][1] != DBNull.Value)
                         {
-                            o[a] = new int();
-                            o[a] = Int32.Parse(t.Rows[k][0].ToString());
-                            a++;
+                            if (Int32.Parse(t.Rows[k][0].ToString()) == Int32.Parse(u.Rows[l][1].ToString()))
+                            {
+                                o[a] = new int();
+                                o[a] = Int32.Parse(t.Rows[k][0].ToString());
+                                a++;
+                                break;
+                            }
                         }
                 }
-                if (oc == false)
+                if (ocupat == false)
                 {
-                    for (int q = 0; q < j; q++)
+                    for (int q = 0; q < t.Rows.Count; q++)
                     {
                         for (int n = 0; n < a; n++)
-                            if (Int32.Parse(t.Rows[q][0].ToString()) == o[n])
-                                t.Rows[q].Delete();
-
+                            if(t.Rows.Count>0)
+                                if (Int32.Parse(t.Rows[q][0].ToString()) == o[n])
+                                {
+                                    t.Rows[q].Delete();
+                                    t.AcceptChanges();
+                                }
                     }
                 }
                 else
                 {
-                    for (int q = 0; q < j; q++)
+                    for (int q = 0; q < t.Rows.Count; q++)
                     {
                         bool ok = false;
                         for (int n = 0; n < a; n++)
                             if (Int32.Parse(t.Rows[q][0].ToString()) == o[n])
                                 ok = true;
                         if (ok == false)
+                        {
                             t.Rows[q].Delete();
+                            t.AcceptChanges();
+                        }
 
                     }
                 }
                 if (Math.Max(inc_app, inc_add) >= 0)
                 {
-                    if (BusinessLayer.start == 1 && Math.Min(inc_add, inc_app) == 0)
+                    if (start == 1 && Math.Min(inc_add, inc_app) == 0)
                     {
 
                         DataView filter = new DataView(t);
                         if (h5 != "")
                         {
                             if (h4 == ">")
-                                filter.RowFilter = string.Format("NUMAR_CAMERE LIKE '{0}*' AND SUPRAFATA_UTILA LIKE '{1}*' AND AN_CONSTRUCTIE LIKE '{2}*' AND   Convert(PRET_INCHIRIERE,'System.Int32') > Convert('{3}','System.Int32')", h1, h2, h3, h5);
+                                filter.RowFilter = string.Format("Convert(NUMAR_CAMERE,'System.String') LIKE '{0}*' AND Convert(SUPRAFATA_UTILA,'System.String') LIKE '{1}*' AND Convert(AN_CONSTRUCTIE,'System.String') LIKE '{2}*' AND Convert(PRET_INCHIRIERE,'System.Int32') > Convert('{3}','System.Int32')", h1, h2, h3, h5);
                             if (h4 == "<")
-                                filter.RowFilter = string.Format("NUMAR_CAMERE LIKE '{0}*' AND SUPRAFATA_UTILA LIKE '{1}*' AND AN_CONSTRUCTIE LIKE '{2}*' AND Convert(PRET_INCHIRIERE,'System.Int32') < Convert('{3}','System.Int32')", h1, h2, h3, h5);
+                                filter.RowFilter = string.Format("Convert(NUMAR_CAMERE,'System.String') LIKE '{0}*' AND Convert(SUPRAFATA_UTILA,'System.String') LIKE '{1}*' AND Convert(AN_CONSTRUCTIE,'System.String') LIKE '{2}*' AND Convert(PRET_INCHIRIERE,'System.Int32') < Convert('{3}','System.Int32')", h1, h2, h3, h5);
                             else if (h4 == "=")
-                                filter.RowFilter = string.Format("NUMAR_CAMERE LIKE '{0}*' AND SUPRAFATA_UTILA LIKE '{1}*' AND AN_CONSTRUCTIE LIKE '{2}*' AND Convert(PRET_INCHIRIERE,'System.Int32') = Convert('{3}','System.Int32')", h1, h2, h3, h5);
+                                filter.RowFilter = string.Format("Convert(NUMAR_CAMERE,'System.String') LIKE '{0}*' AND Convert(SUPRAFATA_UTILA,'System.String') LIKE '{1}*' AND Convert(AN_CONSTRUCTIE,'System.String') LIKE '{2}*' AND Convert(PRET_INCHIRIERE,'System.Int32') = Convert('{3}','System.Int32')", h1, h2, h3, h5);
                         }
                         else
                         {
-                            filter.RowFilter = string.Format("NUMAR_CAMERE LIKE '{0}*' AND SUPRAFATA_UTILA LIKE '{1}*' AND AN_CONSTRUCTIE LIKE '{2}*'", h1, h2, h3);
+                            filter.RowFilter = string.Format("Convert(NUMAR_CAMERE,'System.String') LIKE '{0}*' AND Convert(SUPRAFATA_UTILA,'System.String') LIKE '{1}*' AND Convert(AN_CONSTRUCTIE,'System.String') LIKE '{2}*'", Convert.ToString(h1), Convert.ToString(h2), Convert.ToString(h3));
+
                         }
 
                         m.DataSource = filter;
@@ -363,11 +396,11 @@ namespace ProiectBD_InchiriereApartamente
                     }
                     else
                     {
-                        BusinessLayer.start = 1;
+                        start = 1;
                         
                         for (int k = 0; k < inc_app; k++)
                         {
-                            bool decise = false;
+                            bool decise = false;            //exista elemente comune - true , nu exista - false
                             for (int l = 0; l < inc_add; l++)
                                 if (filter_apartament[k] == filter_adress[l])
                                     decise = true;
@@ -375,7 +408,7 @@ namespace ProiectBD_InchiriereApartamente
                             {
 
                                 int p = t.Rows.Count;
-                                for (int aa = 0; aa < p; aa++)
+                                for (int aa = 0; aa < t.Rows.Count; aa++)
                                 {
                                     try
                                     {
@@ -383,6 +416,7 @@ namespace ProiectBD_InchiriereApartamente
                                         {
 
                                             t.Rows[aa].Delete();
+                                            t.AcceptChanges();
                                             j--;
                                             aa--;
                                         }
@@ -396,11 +430,10 @@ namespace ProiectBD_InchiriereApartamente
 
 
                         }
-
-                        if (rsd == 1)
+                        if (rsd == 1)   //exista id-uri care au fost filtrate,dar nu au fost scoase din vector
                         {
                             int pp = t.Rows.Count;
-                            for (int aa = 0; aa < pp; aa++)
+                            for (int aa = 0; aa < t.Rows.Count; aa++)
                             {
                                 bool sterg = false;
                                 try
@@ -413,7 +446,7 @@ namespace ProiectBD_InchiriereApartamente
                                     if (sterg == false)
                                     {
                                         t.Rows[aa].Delete();
-
+                                        t.AcceptChanges();
                                         j--;
                                         aa--;
                                     }
@@ -424,20 +457,21 @@ namespace ProiectBD_InchiriereApartamente
                                 }
                             }
                         }
-
+                      
                         DataView filter = new DataView(t);
                         if (h5 != "")
                         {
                             if (h4 == ">")
-                                filter.RowFilter = string.Format("NUMAR_CAMERE LIKE '{0}*' AND SUPRAFATA_UTILA LIKE '{1}*' AND AN_CONSTRUCTIE LIKE '{2}*' AND   Convert(PRET_INCHIRIERE,'System.Int32') > Convert('{3}','System.Int32')", h1, h2, h3, h5);
+                                filter.RowFilter = string.Format("Convert(NUMAR_CAMERE,'System.String') LIKE '{0}*' AND Convert(SUPRAFATA_UTILA,'System.String') LIKE '{1}*' AND Convert(AN_CONSTRUCTIE,'System.String') LIKE '{2}*' AND Convert(PRET_INCHIRIERE,'System.Int32') > Convert('{3}','System.Int32')", h1, h2, h3, h5);
                             if (h4 == "<")
-                                filter.RowFilter = string.Format("NUMAR_CAMERE LIKE '{0}*' AND SUPRAFATA_UTILA LIKE '{1}*' AND AN_CONSTRUCTIE LIKE '{2}*' AND Convert(PRET_INCHIRIERE,'System.Int32') < Convert('{3}','System.Int32')", h1, h2, h3, h5);
+                                filter.RowFilter = string.Format("Convert(NUMAR_CAMERE,'System.String') LIKE '{0}*' AND Convert(SUPRAFATA_UTILA,'System.String') LIKE '{1}*' AND Convert(AN_CONSTRUCTIE,'System.String') LIKE '{2}*' AND Convert(PRET_INCHIRIERE,'System.Int32') < Convert('{3}','System.Int32')", h1, h2, h3, h5);
+
                             else if (h4 == "=")
-                                filter.RowFilter = string.Format("NUMAR_CAMERE LIKE '{0}*' AND SUPRAFATA_UTILA LIKE '{1}*' AND AN_CONSTRUCTIE LIKE '{2}*' AND Convert(PRET_INCHIRIERE,'System.Int32') = Convert('{3}','System.Int32')", h1, h2, h3, h5);
+                                filter.RowFilter = string.Format("Convert(NUMAR_CAMERE,'System.String') LIKE '{0}*' AND Convert(SUPRAFATA_UTILA,'System.String') LIKE '{1}*' AND Convert(AN_CONSTRUCTIE,'System.String') LIKE '{2}*' AND Convert(PRET_INCHIRIERE,'System.Int32') = Convert('{3}','System.Int32')", h1, h2, h3, h5);
                         }
                         else
                         {
-                            filter.RowFilter = string.Format("NUMAR_CAMERE LIKE '{0}*' AND SUPRAFATA_UTILA LIKE '{1}*' AND AN_CONSTRUCTIE LIKE '{2}*'", h1, h2, h3);
+                            filter.RowFilter = string.Format("Convert(NUMAR_CAMERE,'System.String') LIKE '{0}*' AND Convert(SUPRAFATA_UTILA,'System.String') LIKE '{1}*' AND Convert(AN_CONSTRUCTIE,'System.String') LIKE '{2}*'", Convert.ToString(h1), Convert.ToString(h2), Convert.ToString(h3));
                         }
 
                         m.DataSource = filter;
@@ -454,7 +488,6 @@ namespace ProiectBD_InchiriereApartamente
                         inc_app = inc;
 
                     }
-
 
                 }
             }

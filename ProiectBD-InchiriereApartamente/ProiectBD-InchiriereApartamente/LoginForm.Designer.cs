@@ -28,7 +28,6 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(LoginForm));
             this.btnAutentificare = new System.Windows.Forms.Button();
             this.tbParola = new System.Windows.Forms.TextBox();
             this.rtbUsername = new System.Windows.Forms.RichTextBox();
@@ -59,6 +58,7 @@
             // tbParola
             // 
             this.tbParola.BackColor = System.Drawing.Color.Goldenrod;
+            this.tbParola.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
             this.tbParola.Location = new System.Drawing.Point(392, 253);
             this.tbParola.Name = "tbParola";
             this.tbParola.PasswordChar = '*';
@@ -68,6 +68,7 @@
             // rtbUsername
             // 
             this.rtbUsername.BackColor = System.Drawing.Color.Goldenrod;
+            this.rtbUsername.ForeColor = System.Drawing.SystemColors.HighlightText;
             this.rtbUsername.Location = new System.Drawing.Point(392, 147);
             this.rtbUsername.Name = "rtbUsername";
             this.rtbUsername.Size = new System.Drawing.Size(150, 27);
@@ -79,6 +80,7 @@
             this.lblUsername.AutoSize = true;
             this.lblUsername.BackColor = System.Drawing.Color.Goldenrod;
             this.lblUsername.Font = new System.Drawing.Font("Comic Sans MS", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblUsername.ForeColor = System.Drawing.SystemColors.ControlText;
             this.lblUsername.Location = new System.Drawing.Point(424, 98);
             this.lblUsername.Name = "lblUsername";
             this.lblUsername.Size = new System.Drawing.Size(85, 23);
@@ -90,6 +92,7 @@
             this.lblParola.AutoSize = true;
             this.lblParola.BackColor = System.Drawing.Color.Goldenrod;
             this.lblParola.Font = new System.Drawing.Font("Comic Sans MS", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblParola.ForeColor = System.Drawing.SystemColors.ControlText;
             this.lblParola.Location = new System.Drawing.Point(443, 200);
             this.lblParola.Name = "lblParola";
             this.lblParola.Size = new System.Drawing.Size(57, 23);
@@ -137,7 +140,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 19F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("$this.BackgroundImage")));
+            this.BackgroundImage = global::ProiectBD_InchiriereApartamente.Properties.Resources.city1;
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.ClientSize = new System.Drawing.Size(901, 373);
             this.Controls.Add(this.lblParola);

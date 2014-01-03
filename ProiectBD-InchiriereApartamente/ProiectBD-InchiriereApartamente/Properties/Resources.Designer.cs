@@ -63,9 +63,29 @@ namespace ProiectBD_InchiriereApartamente.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap apartments_for_rent {
+        internal static System.Drawing.Bitmap buildings {
             get {
-                object obj = ResourceManager.GetObject("apartments_for_rent", resourceCulture);
+                object obj = ResourceManager.GetObject("buildings", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap city {
+            get {
+                object obj = ResourceManager.GetObject("city", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap city1 {
+            get {
+                object obj = ResourceManager.GetObject("city1", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

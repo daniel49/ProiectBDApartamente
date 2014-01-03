@@ -32,6 +32,14 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="itextsharp" />
+    <Reference Include="itextsharp.pdfa" />
+    <Reference Include="itextsharp.xtra" />
+    <Reference Include="Microsoft.Office.Interop.Excel, Version=14.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+      <HintPath>..\..\..\..\Visual Studio 2012\Projects\Tema2BD\Tema2BD\bin\Debug\Microsoft.Office.Interop.Excel.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
@@ -73,6 +81,9 @@
     <Compile Include="UserForm.Designer.cs">
       <DependentUpon>UserForm.cs</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="AdministratorForm.resx">
+      <DependentUpon>AdministratorForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="LoginForm.resx">
       <DependentUpon>LoginForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -106,13 +117,19 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\apartments_for_rent.jpg" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="Resources\GenericButton.jpg" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\Schimba_username_sau_parola.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\buildings.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\city1.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\city.jpg" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
