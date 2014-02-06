@@ -547,6 +547,7 @@ namespace ProiectBD_InchiriereApartamente
             b.filter_datagridview(dataGridView1, comboBox1.Text.ToString(), comboBox2.Text.ToString(), comboBox3.Text.ToString(), comboBox4.Text.ToString(), comboBox6.Text.ToString(), comboBox7.Text.ToString(), comboBox8.Text.ToString(), comboBox9.Text.ToString(), comboBox10.Text.ToString(), ocupat, option,b.start,1);
         }
 
+        //daca sunt in tabelul apartamente,daca apas pe celula liniei unui apartament imi va afisa adresa si clientii din apartament
         private void details(object sender, DataGridViewCellEventArgs e)    //apasa pe o celula si incarca clientii / etc
         {
             if (option == 1)
@@ -768,18 +769,34 @@ namespace ProiectBD_InchiriereApartamente
         private void ajutorToolStripMenuItem_Click(object sender, EventArgs e)
         {
             MessageBox.Show(@"
-        Apasati pe (Apartamente....) 'LIBERE' pentru a vizualiza apartamentele libere,sau adresa apartamentelor libere,altfel pe 'OCUPATE'.
+        Apasati pe (Apartamente....) 'LIBERE' pentru a vizualiza apartamentele
+libere,sau adresa apartamentelor libere,altfel pe 'OCUPATE'.
         Alegeti Sursa de Date din casuta dreapta-sus.
-        Filtrarea se face in timp real,de indata ce se introduce text in casutele de filtrare.Apasati pe Sterge filtrele pentru a inlatura filtrele 
-dinaintea apasarii butonului de stergere a filtrelor.
-        Puteti sterge decat clienti,celelalte tabele putand fi decat vizualizate.
-        Pentru a sterge un client selectati-l printr-un click din tabel,apoi din bara de meniu,apasati 'Sterge Client'.Pentru a introduce un client
-apasati pe 'Adauga Client' din bara de meniu.Casutele care apar trebuie completate.Apoi dati click pe butonul 'Adauga client'.
+        Filtrarea se face in timp real,de indata ce se introduce text in
+casutele de filtrare. Apasati pe Sterge filtrele pentru a inlatura filtrele 
+din casute si de asupra tabelului.
+        Puteti opera decat asupra clientilor,celelalte tabele putand fi
+decat vizualizate.
+        Pentru a sterge un client selectati-l printr-un click din tabel,
+apoi din bara de meniu,apasati 'Sterge Client'.Pentru a introduce un client 
+apasati pe 'Adauga Client' din bara de meniu.Apoi dati click pe butonul 
+'Adauga client'.Casuta 'ID Apartament' poate sa aiba valoarea 0 sau nimic
+(pentru ambele variante va rezulta valoare nula),sau poate avea o valoare.Pentru a 
+modifica un client,apasati pe 'Modifica Client' din bara de meniu.Casuta
+ID Apartament poate nu avea nici o valoare(casuta e lasata goala,valoarea 
+este cea de dinaintea modificarii),poate avea valoarea '0'(din care va rezulta 
+valoare nula),sau orice alta valoare.
 
-    OBS : toate campurile trebuiesc completate iar data inregistrarii clientului se va genera automat.
 
-    !!! : Daca va aflati in Apartamente sau Adrese puteti da click pe o celula din primul tabel pentru a vedea detaliile despre acel rand
-pe care ati dat click
+    OBS : unele campuri trebuie completate pe cand altele nu.CITITI IN
+AJUTOR MAI SUS PENTRU MAI MULTE DETALII.Data inregistrarii clientului 
+se va genera automat(va fi cea curenta).
+
+    !!! : Daca va aflati in Apartamente sau Adrese puteti da click pe o
+celula din primul tabel pentru a vedea detaliile despre acel rand
+pe care ati dat click(se va vedea in 3 tabele informatiile despre
+apartament,adresa apartamentului si clientii din apartament,daca va aflati
+in apartamentele ocupate).
 ");
         }
 
@@ -897,7 +914,7 @@ pe care ati dat click
                     spp[0].Value = Convert.ToInt32(richTextBox1.Text);
                     spp[0].Direction = ParameterDirection.Input;
                 }
-                else if (richTextBox1.Text == "")
+                else if (richTextBox1.Text == "0" || richTextBox1.Text == "")
                 {
                     spp[0].ParameterName = "@ID_APARTAMENT";
                     spp[0].SqlDbType = SqlDbType.Int;
@@ -1119,6 +1136,7 @@ pe care ati dat click
             label14.Visible = label15.Visible = label16.Visible = label17.Visible = label18.Visible = label19.Visible = false;
         }
 
+        //buton de sters filtrele si valorile
         private void button4_Click(object sender, EventArgs e)
         {
             comboBox6.Text = comboBox7.Text = comboBox8.Text = comboBox10.Text = "";
@@ -1126,15 +1144,16 @@ pe care ati dat click
 
             comboBox11.Text = comboBox12.Text = comboBox13.Text = comboBox14.Text = comboBox15.Text = comboBox16.Text = comboBox17.Text = "";
 
-            // DE COMPLETAT
-            dvClienti.RowFilter = "";
+            if (comboBox5.Text == "Apartamente" || comboBox5.Text == "Adrese")
+                filter_changed(sender, e);
+            else dvClienti.RowFilter = "";
         }
 
         private void SearchingForEntries(object sender, EventArgs e)
         {
                 if (comboBox17.Text == "" && comboBox16.Text == "" && comboBox15.Text == "" && comboBox14.Text == "" && comboBox13.Text == "" && comboBox12.Text == "" && comboBox11.Text == "")
                     dvClienti.RowFilter = "";
-                else if (comboBox14.Text == "")
+                else if (comboBox14.Text == "") //combobox14 poate avea valoare nula de aceea fac if-ul(id_apartament)
                 {
                     dvClienti.RowFilter = "";
                    dvClienti.RowFilter = String.Format("NUME LIKE '{0}*' AND PRENUME LIKE '{1}*' AND SERIE_NUMAR_CI LIKE '{2}*' AND CNP LIKE '{3}*' AND DATA_INCHIRIERE LIKE '{4}*' AND DATA_INCHEIERE LIKE '{5}*'", comboBox13.Text, comboBox12.Text, comboBox11.Text, comboBox17.Text, comboBox16.Text, comboBox15.Text);
@@ -1165,7 +1184,7 @@ pe care ati dat click
             }
             // Pozitionez caret-ul la finalul textului.
             comboBox14.Select(comboBox14.Text.Length, 0);
-            this.SearchingForEntries(sender, e);
+            this.SearchingForEntries(sender, e);    //pe baza textului introdus,filtrez
         }
         private void comboBox13_TextUpdate(object sender, EventArgs e)
         {
@@ -1302,7 +1321,7 @@ pe care ati dat click
 
         private void Generic_SelectedIndexChanged(object sender, EventArgs e)
         {
-            this.SearchingForEntries(sender, e);
+            this.SearchingForEntries(sender, e);    //pentru selectarea unei optiuni din combobox
         }
 
         private void inEXCELToolStripMenuItem_Click(object sender, EventArgs e)

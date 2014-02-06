@@ -138,6 +138,7 @@ namespace ProiectBD_InchiriereApartamente
             return m;
         }
 
+        
         //intru in functia asta de fiecare data cand se modifca textul din filtre
         public void filter_datagridview(DataGridView m, string f, string g, string h, string i, string h1, string h2, string h3, string h4, string h5, bool ocupat, int option, int start,int rsd)
         {
@@ -173,39 +174,49 @@ namespace ProiectBD_InchiriereApartamente
                 if (ocupat == false)    //afisez apartamentele libere
                 {
                     //parcurg lista de apartamente ocupate,si afisez apartamentele libere
-                    for (int q = 0; q < y.Rows.Count; q++)
+                    for (int q = 0; q < t.Rows.Count; q++)
                     {
                         for (int n = 0; n < a; n++)
-                            if(y.Rows.Count>0)
-                                if (Int32.Parse(y.Rows[q][0].ToString()) == o[n])
+                            if(t.Rows.Count>0)
+                                if (Int32.Parse(t.Rows[q][0].ToString()) == o[n])
                                 {
-                                    y.Rows[q].Delete();
-                                    y.AcceptChanges();
+                                    t.Rows[q].Delete();
+                                    break;
                                 }
                     }
+                    t.AcceptChanges();
                 }
                             //vreau sa afisez apartamentele ocupate
                 else
                 {
-                    for (int q = 0; q < y.Rows.Count; q++)
+                    for (int q = 0; q < t.Rows.Count; q++)
                     {
                         bool ok = false;
                         for (int n = 0; n < a; n++)
-                            if (Int32.Parse(y.Rows[q][0].ToString()) == o[n])
+                            if (Int32.Parse(t.Rows[q][0].ToString()) == o[n])
                                 ok = true;
                         if (ok == false)    //daca id-ul este pt un apartament liber il sterg din lista
                         {
-                            y.Rows[q].Delete();
-                            y.AcceptChanges();
+                            t.Rows[q].Delete();
                         }
                     }
+                    t.AcceptChanges();
                 }
                  if (Math.Max(inc_app, inc_add) >= 0)   //e degeaba
                 {                                                                     //pt option = 1 : ma aflu in adrese
                     if (start == 1 && Math.Min(inc_add, inc_app) == 0)    //se afla ceva in filtre dar un filtru face sa nu corespunda nimic cu val din filtru
                     {
                         DataView filter = new DataView(y);
-                        filter.RowFilter = string.Format("ORAS LIKE '{0}*' AND STRADA LIKE '{1}*' AND SECTOR LIKE '{2}*' AND ETAJ LIKE '{3}*'", f, g, h, i);
+                        
+                        if (h == "" && i != "")
+                            filter.RowFilter = string.Format("ORAS LIKE '{0}*' AND STRADA LIKE '{1}*' AND Convert(ETAJ,'System.String') LIKE '{2}*'", f, g, i);
+                        else if (i == "" && h != "")
+                            filter.RowFilter = string.Format("ORAS LIKE '{0}*' AND STRADA LIKE '{1}*' AND Convert(SECTOR,'System.String') LIKE '{2}*'", f, g, h);
+                        else if (h == "" && i == "")
+                            filter.RowFilter = string.Format("ORAS LIKE '{0}*' AND STRADA LIKE '{1}*'", f, g);
+                        else
+                            filter.RowFilter = string.Format("ORAS LIKE '{0}*' AND STRADA LIKE '{1}*' AND Convert(SECTOR,'System.String') LIKE '{2}*' AND Convert(ETAJ,'System.String') LIKE '{3}*'", f, g, h, i);
+                        
                         m.DataSource = filter;
                         int e = m.Rows.Count;
                         int inc = 0;
@@ -285,7 +296,16 @@ namespace ProiectBD_InchiriereApartamente
                             }
                         }
                         DataView filter = new DataView(y);
-                        filter.RowFilter = string.Format("ORAS LIKE '{0}*' AND STRADA LIKE '{1}*' AND SECTOR LIKE '{2}*' AND ETAJ LIKE '{3}*'", f, g, h, i);
+                        
+                        if(h=="" && i!="")
+                            filter.RowFilter = string.Format("ORAS LIKE '{0}*' AND STRADA LIKE '{1}*' AND Convert(ETAJ,'System.String') LIKE '{2}*'", f, g, i);
+                        else if (i == "" && h!="")
+                            filter.RowFilter = string.Format("ORAS LIKE '{0}*' AND STRADA LIKE '{1}*' AND Convert(SECTOR,'System.String') LIKE '{2}*'", f, g, h);
+                        else if (h=="" && i == "")
+                            filter.RowFilter = string.Format("ORAS LIKE '{0}*' AND STRADA LIKE '{1}*'", f, g);
+                        else
+                            filter.RowFilter = string.Format("ORAS LIKE '{0}*' AND STRADA LIKE '{1}*' AND Convert(SECTOR,'System.String') LIKE '{2}*' AND Convert(ETAJ,'System.String') LIKE '{3}*'", f, g, h, i);
+                        
                         m.DataSource = filter;
                         int e = m.Rows.Count;
                         int inc = 0;
@@ -339,9 +359,10 @@ namespace ProiectBD_InchiriereApartamente
                                 if (Int32.Parse(t.Rows[q][0].ToString()) == o[n])
                                 {
                                     t.Rows[q].Delete();
-                                    t.AcceptChanges();
+                                    break;
                                 }
                     }
+                    t.AcceptChanges();
                 }
                 else
                 {
@@ -354,10 +375,9 @@ namespace ProiectBD_InchiriereApartamente
                         if (ok == false)
                         {
                             t.Rows[q].Delete();
-                            t.AcceptChanges();
-                        }
-
+                        }                      
                     }
+                    t.AcceptChanges();
                 }
                 if (Math.Max(inc_app, inc_add) >= 0)
                 {
@@ -491,6 +511,241 @@ namespace ProiectBD_InchiriereApartamente
 
                 }
             }
+        }
+        
+
+
+
+
+
+
+
+
+        public void GetClientFields(int id_client, ref int id_apartament, ref string nume, ref string prenume, ref string serie_numar_ci, ref string cnp, ref string data_inchiriere, ref string data_incheiere)
+        {
+            DataTable dt = new DataTable();
+            dt = read_table("Clienti");
+            dt.TableName = "Clienti";
+            foreach (DataRow dr in dt.Rows)
+            {
+                if (Convert.ToInt32(dr["ID_CLIENT"]) == id_client)
+                {
+                    if (dr["ID_APARTAMENT"] == DBNull.Value)
+                        id_apartament = -1;
+                    else id_apartament = Convert.ToInt32(dr["ID_APARTAMENT"]);
+                    nume = Convert.ToString(dr["NUME"]);
+                    prenume = Convert.ToString(dr["PRENUME"]);
+                    serie_numar_ci = Convert.ToString(dr["SERIE_NUMAR_CI"]);
+                    cnp = Convert.ToString(dr["CNP"]);
+                    data_inchiriere = Convert.ToString(dr["DATA_INCHIRIERE"]);
+                    data_incheiere = Convert.ToString(dr["DATA_INCHEIERE"]);
+                    break;
+                }
+            }
+        }
+        public void GetApartmentFields(int id_apartament, ref int numar_camere, ref int suprafata_utila, ref int an_constructie, ref string facilitati, ref int pret_inchiriere)
+        {
+            DataTable dt = new DataTable();
+            dt = read_table("Apartamente");
+            dt.TableName = "Apartamente";
+
+            foreach (DataRow dr in dt.Rows)
+            {
+                if (Convert.ToInt32(dr["ID_APARTAMENT"]) == id_apartament)
+                {
+                    numar_camere = Convert.ToInt32(dr["NUMAR_CAMERE"]);
+                    suprafata_utila = Convert.ToInt32(dr["SUPRAFATA_UTILA"]);
+                    an_constructie = Convert.ToInt32(dr["AN_CONSTRUCTIE"]);
+                    if (dr["FACILITATI"] == DBNull.Value)
+                        facilitati = "-1";
+                    else facilitati = Convert.ToString(dr["FACILITATI"]);
+                    pret_inchiriere = Convert.ToInt32(dr["PRET_INCHIRIERE"]);
+                    break;
+                }
+            }
+        }
+        public void GetAddressFields(int id_adresa, ref string oras, ref  string strada, ref string numar, ref string bloc, ref string scara, ref string etaj, ref string numar_apartament, ref string sector)
+        {
+            DataTable dt = new DataTable();
+            dt = read_table("Adresa");
+            dt.TableName = "Adrese";
+
+            foreach (DataRow dr in dt.Rows)
+            {
+                if (Convert.ToInt32(dr["ID_ADRESA"]) == id_adresa)
+                {
+                    oras = Convert.ToString(dr["ORAS"]);
+                    strada = Convert.ToString(dr["STRADA"]);
+                    numar = Convert.ToString(dr["NUMAR"]);
+                    if (dr["BLOC"] == DBNull.Value)
+                        bloc = "-1";
+                    else bloc = Convert.ToString(dr["BLOC"]);
+                    if (dr["SCARA"] == DBNull.Value)
+                        scara = "-1";
+                    else scara = Convert.ToString(dr["SCARA"]);
+                    if (dr["ETAJ"] == DBNull.Value)
+                        etaj = "-1";
+                    else etaj = Convert.ToString(dr["ETAJ"]);
+                    if (dr["NUMAR_APARTAMENT"] == DBNull.Value)
+                        numar_apartament = "-1";
+                    else numar_apartament = Convert.ToString(dr["NUMAR_APARTAMENT"]);
+                    if (dr["SECTOR"] == DBNull.Value)
+                        sector = "-1";
+                    else sector = Convert.ToString(dr["SECTOR"]);
+                    break;
+                }
+            }
+        }
+        public void ExportToExcel(DataGridView dgvInfo, string dataSource)
+        {
+            // Creez o aplicatie excel noua.
+            Microsoft.Office.Interop.Excel._Application application = new Microsoft.Office.Interop.Excel.Application();
+            // Creez un nou workbook in cadrul aplicatiei excel.
+            Microsoft.Office.Interop.Excel._Workbook workbook = application.Workbooks.Add(Type.Missing);
+            // Creez un worksheet nou.
+            Microsoft.Office.Interop.Excel._Worksheet worksheet = null;
+            // Vedere asupra sheet-ului din spatele programului.
+            application.Visible = true;
+            // Preiau referinta primului sheet.Default,numele sheet-ului este Sheet1.
+            // Stochez referinta in worksheet.
+            worksheet = workbook.Sheets["Sheet1"];
+            worksheet = workbook.ActiveSheet;
+            // Schimb numele sheet-ului activ.
+            worksheet.Name = "Exported from datagridview";
+            // Formatez celulele ca fiind text.
+            worksheet.Cells.NumberFormat = "@";
+            worksheet.Cells.ColumnWidth = 20;
+            // Stochez in celule(pe primul rand) numele coloanelor de tabel.
+            for (int i = 1; i < dgvInfo.Columns.Count + 1; i++)
+            {
+                worksheet.Cells[1, i] = dgvInfo.Columns[i - 1].HeaderText;
+                worksheet.Cells[1, i].Interior.ColorIndex = 40;
+            }
+            // Stochez fiecare valoare din tabel in cate o celula.
+            for (int i = 0; i < dgvInfo.Rows.Count; i++)
+            {
+                for (int j = 0; j < dgvInfo.Columns.Count; j++)
+                {
+                    worksheet.Cells[i + 2, j + 1] = Convert.ToString(dgvInfo.Rows[i].Cells[j].Value);
+                    worksheet.Cells[i + 2, j + 1].Interior.ColorIndex = 36;
+                }
+            }
+            // Salvez aplicatia fara sa ma intrebe daca vreau sa suprascriu vre-un fisier existent.
+            application.DisplayAlerts = false;
+            string filename = dataSource + "EXCEL";
+            workbook.SaveAs(filename, Type.Missing, Type.Missing, Type.Missing, Type.Missing, Type.Missing, Microsoft.Office.Interop.Excel.XlSaveAsAccessMode.xlExclusive, Type.Missing, Type.Missing, Type.Missing, Type.Missing);
+            // Inchid aplicatia excel.
+            application.Quit();
+        }
+
+        public void ExportToPDF(DataGridView dgvInfo, string dataSource)
+        {
+            try
+            {
+                string FirstLine = dataSource + " table exported to PDF";
+
+
+                Document document = new Document(PageSize.A4.Rotate(), 30, 30, 20, 20);
+
+                // Deschid fisierul pdf al meu.
+                PdfWriter.GetInstance(document, new FileStream(dataSource + "PDF.pdf", FileMode.Append, FileAccess.Write));
+
+                // Stabilesc fonturile.
+                iTextSharp.text.Font titleFont = new iTextSharp.text.Font(iTextSharp.text.Font.FontFamily.HELVETICA, 14.0F, iTextSharp.text.Font.BOLD, BaseColor.BLACK);
+
+                iTextSharp.text.Font tableFont = new iTextSharp.text.Font(iTextSharp.text.Font.FontFamily.HELVETICA, 12.0F, iTextSharp.text.Font.NORMAL, BaseColor.BLACK);
+
+                iTextSharp.text.Font headerfont = new iTextSharp.text.Font(iTextSharp.text.Font.FontFamily.HELVETICA, 12.0F, iTextSharp.text.Font.BOLD, BaseColor.BLACK);
+
+                // Creez un table pdf nou.
+                PdfPTable PdfTable = new PdfPTable(dgvInfo.Columns.Count);
+                PdfTable.TotalWidth = dgvInfo.Width;
+
+                float[] widths = null;
+                // Retin latimea coloanelor.
+                if (dataSource == "Clienti")
+                {
+                    widths = new float[] { dgvInfo.Columns[0].Width, dgvInfo.Columns[1].Width, dgvInfo.Columns[2].Width, 
+                                           dgvInfo.Columns[3].Width,dgvInfo.Columns[4].Width,dgvInfo.Columns[5].Width,dgvInfo.Columns[6].Width,dgvInfo.Columns[7].Width };
+                }
+                else if (dataSource == "ApartamenteLibere" || dataSource == "ApartamenteOcupate")
+                {
+                    widths = new float[] { dgvInfo.Columns[0].Width, dgvInfo.Columns[1].Width, dgvInfo.Columns[2].Width, 
+                                           dgvInfo.Columns[3].Width,dgvInfo.Columns[4].Width,dgvInfo.Columns[5].Width,dgvInfo.Columns[6].Width };
+                }
+                else if (dataSource == "Adrese")
+                {
+                    widths = new float[] { dgvInfo.Columns[0].Width, dgvInfo.Columns[1].Width, dgvInfo.Columns[2].Width, 
+                                           dgvInfo.Columns[3].Width,dgvInfo.Columns[4].Width,dgvInfo.Columns[5].Width,dgvInfo.Columns[6].Width,dgvInfo.Columns[7].Width,dgvInfo.Columns[8].Width };
+                }
+                PdfTable.SetWidths(widths);
+                PdfTable.HorizontalAlignment = 1; // 0 - left, 1 - center, 2 - right;
+                PdfTable.SpacingBefore = 2.0F;
+
+
+                PdfPCell CurrentCell = null;
+
+                document.Open();
+                Phrase phrase = new Phrase(new Chunk(FirstLine, titleFont));
+                document.Add(phrase);
+
+                // Adaug numele coloanelor
+                foreach (DataGridViewColumn c in dgvInfo.Columns)
+                {
+                    CurrentCell = new PdfPCell(new Phrase(new Chunk(c.HeaderText, headerfont)));
+                    CurrentCell.HorizontalAlignment = PdfPCell.ALIGN_CENTER;
+                    CurrentCell.VerticalAlignment = PdfPCell.ALIGN_CENTER;
+                    CurrentCell.BackgroundColor = BaseColor.GREEN;
+                    PdfTable.AddCell(CurrentCell);
+                }
+
+                // Adaug valorile de pe randurile tabelului.
+                if (dgvInfo.Rows.Count > 0)
+                {
+                    for (int i = 0; i < dgvInfo.Rows.Count; i++)
+                    {
+                        for (int j = 0; j < dgvInfo.Columns.Count; j++)
+                        {
+                            CurrentCell = new PdfPCell(new Phrase(Convert.ToString(dgvInfo.Rows[i].Cells[j].Value), tableFont));
+                            CurrentCell.HorizontalAlignment = PdfPCell.ALIGN_CENTER;
+                            CurrentCell.VerticalAlignment = PdfPCell.ALIGN_CENTER;
+                            PdfTable.AddCell(CurrentCell);
+                        }
+                    }
+                }
+                // Adaug tabelul pdf creat in fisier si apoi il inchid.
+                document.Add(PdfTable);
+                document.Close();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message + "\r\n" + ex.StackTrace, "Error Generating PDF", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+        public DataTable GetTablesWithRelationships(string spName, SqlParameter[] spc)
+        {
+            DataTable dt = new DataTable();
+            dt = dl.ExecuteReader_StoredProcedure(spName, spc);
+            return dt;
+        }
+        public int GetApartmentIdByAddressId(int id_adresa)
+        {
+            DataTable dt = null;
+            dt = dl.ExecuteReader_GetTable("Apartamente");
+            foreach (DataRow dr in dt.Rows)
+            {
+                if (Convert.ToInt32(dr["ID_ADRESA"]) == id_adresa)
+                {
+                    return Convert.ToInt32(dr["ID_APARTAMENT"]);
+                }
+            }
+            return -1;
+        }
+        public int GetLastAddress()
+        {
+            DataTable dt = null;
+            dt = dl.ExecuteReader_GetTable("Adresa");
+            return Convert.ToInt32(dt.Rows[dt.Rows.Count - 1]["ID_ADRESA"]);
         }
     }
 }

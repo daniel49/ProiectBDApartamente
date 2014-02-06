@@ -164,7 +164,7 @@
             this.comboBox15.Location = new System.Drawing.Point(561, 299);
             this.comboBox15.Name = "comboBox15";
             this.comboBox15.Size = new System.Drawing.Size(145, 24);
-            this.comboBox15.TabIndex = 110;
+            this.comboBox15.TabIndex = 106;
             this.comboBox15.SelectedIndexChanged += new System.EventHandler(this.Generic_SelectedIndexChanged);
             this.comboBox15.TextUpdate += new System.EventHandler(this.comboBox15_TextUpdate);
             // 
@@ -177,7 +177,7 @@
             this.comboBox17.Location = new System.Drawing.Point(195, 299);
             this.comboBox17.Name = "comboBox17";
             this.comboBox17.Size = new System.Drawing.Size(140, 24);
-            this.comboBox17.TabIndex = 108;
+            this.comboBox17.TabIndex = 104;
             this.comboBox17.SelectedIndexChanged += new System.EventHandler(this.Generic_SelectedIndexChanged);
             this.comboBox17.TextUpdate += new System.EventHandler(this.comboBox17_TextUpdate);
             // 
@@ -283,8 +283,8 @@
             this.button4.BackColor = System.Drawing.Color.Transparent;
             this.button4.BackgroundImage = global::ProiectBD_InchiriereApartamente.Properties.Resources.GenericButton;
             this.button4.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.button4.Font = new System.Drawing.Font("Comic Sans MS", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button4.ForeColor = System.Drawing.Color.White;
+            this.button4.Font = new System.Drawing.Font("Comic Sans MS", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.button4.ForeColor = System.Drawing.Color.Crimson;
             this.button4.Location = new System.Drawing.Point(272, 113);
             this.button4.Name = "button4";
             this.button4.Size = new System.Drawing.Size(166, 31);
@@ -299,11 +299,11 @@
             this.button3.BackgroundImage = global::ProiectBD_InchiriereApartamente.Properties.Resources.GenericButton;
             this.button3.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.button3.Font = new System.Drawing.Font("Comic Sans MS", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button3.ForeColor = System.Drawing.Color.White;
-            this.button3.Location = new System.Drawing.Point(1093, 665);
+            this.button3.ForeColor = System.Drawing.Color.OrangeRed;
+            this.button3.Location = new System.Drawing.Point(1061, 665);
             this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(203, 32);
-            this.button3.TabIndex = 98;
+            this.button3.Size = new System.Drawing.Size(277, 32);
+            this.button3.TabIndex = 99;
             this.button3.Text = "Adauga";
             this.button3.UseVisualStyleBackColor = false;
             this.button3.Click += new System.EventHandler(this.button3_Click);
@@ -470,7 +470,7 @@
             this.comboBox16.Location = new System.Drawing.Point(373, 299);
             this.comboBox16.Name = "comboBox16";
             this.comboBox16.Size = new System.Drawing.Size(139, 24);
-            this.comboBox16.TabIndex = 109;
+            this.comboBox16.TabIndex = 105;
             this.comboBox16.SelectedIndexChanged += new System.EventHandler(this.Generic_SelectedIndexChanged);
             this.comboBox16.TextUpdate += new System.EventHandler(this.comboBox16_TextUpdate);
             // 
@@ -517,7 +517,7 @@
             this.comboBox10.Location = new System.Drawing.Point(821, 304);
             this.comboBox10.Name = "comboBox10";
             this.comboBox10.Size = new System.Drawing.Size(129, 24);
-            this.comboBox10.TabIndex = 81;
+            this.comboBox10.TabIndex = 68;
             this.comboBox10.SelectedIndexChanged += new System.EventHandler(this.filter_changed);
             this.comboBox10.TextUpdate += new System.EventHandler(this.filter_changed);
             // 
@@ -584,7 +584,9 @@
             this.comboBox9.Location = new System.Drawing.Point(656, 304);
             this.comboBox9.Name = "comboBox9";
             this.comboBox9.Size = new System.Drawing.Size(145, 24);
-            this.comboBox9.TabIndex = 75;
+            this.comboBox9.TabIndex = 67;
+            this.comboBox9.SelectedIndexChanged += new System.EventHandler(this.filter_changed);
+            this.comboBox9.TextUpdate += new System.EventHandler(this.filter_changed);
             // 
             // comboBox8
             // 
@@ -595,7 +597,7 @@
             this.comboBox8.Location = new System.Drawing.Point(468, 304);
             this.comboBox8.Name = "comboBox8";
             this.comboBox8.Size = new System.Drawing.Size(139, 24);
-            this.comboBox8.TabIndex = 74;
+            this.comboBox8.TabIndex = 66;
             this.comboBox8.SelectedIndexChanged += new System.EventHandler(this.filter_changed);
             this.comboBox8.TextUpdate += new System.EventHandler(this.filter_changed);
             // 
@@ -608,7 +610,7 @@
             this.comboBox7.Location = new System.Drawing.Point(290, 304);
             this.comboBox7.Name = "comboBox7";
             this.comboBox7.Size = new System.Drawing.Size(140, 24);
-            this.comboBox7.TabIndex = 73;
+            this.comboBox7.TabIndex = 65;
             this.comboBox7.SelectedIndexChanged += new System.EventHandler(this.filter_changed);
             this.comboBox7.TextUpdate += new System.EventHandler(this.filter_changed);
             // 
@@ -621,7 +623,7 @@
             this.comboBox6.Location = new System.Drawing.Point(90, 304);
             this.comboBox6.Name = "comboBox6";
             this.comboBox6.Size = new System.Drawing.Size(144, 24);
-            this.comboBox6.TabIndex = 72;
+            this.comboBox6.TabIndex = 64;
             this.comboBox6.SelectedIndexChanged += new System.EventHandler(this.filter_changed);
             this.comboBox6.TextUpdate += new System.EventHandler(this.filter_changed);
             // 
@@ -928,14 +930,14 @@
             // adaugaToolStripMenuItem
             // 
             this.adaugaToolStripMenuItem.Name = "adaugaToolStripMenuItem";
-            this.adaugaToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.adaugaToolStripMenuItem.Size = new System.Drawing.Size(130, 22);
             this.adaugaToolStripMenuItem.Text = "Adauga";
             this.adaugaToolStripMenuItem.Click += new System.EventHandler(this.adaugaToolStripMenuItem_Click);
             // 
             // stergeToolStripMenuItem
             // 
             this.stergeToolStripMenuItem.Name = "stergeToolStripMenuItem";
-            this.stergeToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.stergeToolStripMenuItem.Size = new System.Drawing.Size(130, 22);
             this.stergeToolStripMenuItem.Text = "Sterge";
             this.stergeToolStripMenuItem.Click += new System.EventHandler(this.stergeToolStripMenuItem_Click);
             // 
@@ -981,7 +983,7 @@
             this.richTextBox7.Location = new System.Drawing.Point(1115, 582);
             this.richTextBox7.Name = "richTextBox7";
             this.richTextBox7.Size = new System.Drawing.Size(166, 24);
-            this.richTextBox7.TabIndex = 114;
+            this.richTextBox7.TabIndex = 97;
             this.richTextBox7.Text = "";
             // 
             // label28
@@ -1002,7 +1004,7 @@
             this.richTextBox8.Location = new System.Drawing.Point(1116, 633);
             this.richTextBox8.Name = "richTextBox8";
             this.richTextBox8.Size = new System.Drawing.Size(166, 24);
-            this.richTextBox8.TabIndex = 116;
+            this.richTextBox8.TabIndex = 98;
             this.richTextBox8.Text = "";
             // 
             // AdministratorForm
@@ -1078,6 +1080,7 @@
             this.Name = "AdministratorForm";
             this.Text = "AdministratorForm";
             this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
+            this.Load += new System.EventHandler(this.AdministratorForm_Load);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView3)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView2)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();

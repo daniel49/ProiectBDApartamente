@@ -58,6 +58,12 @@
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.adaugaClientToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.adaugaClientToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.stergeClientToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.modificaClientToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.exportareToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.inEXCELToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.inPDFToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.ajutorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.label13 = new System.Windows.Forms.Label();
             this.richTextBox1 = new System.Windows.Forms.RichTextBox();
@@ -88,12 +94,6 @@
             this.comboBox15 = new System.Windows.Forms.ComboBox();
             this.comboBox16 = new System.Windows.Forms.ComboBox();
             this.comboBox17 = new System.Windows.Forms.ComboBox();
-            this.adaugaClientToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
-            this.stergeClientToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
-            this.modificaClientToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.exportareToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.inEXCELToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.inPDFToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView3)).BeginInit();
@@ -298,7 +298,7 @@
             this.comboBox6.Location = new System.Drawing.Point(90, 282);
             this.comboBox6.Name = "comboBox6";
             this.comboBox6.Size = new System.Drawing.Size(144, 24);
-            this.comboBox6.TabIndex = 15;
+            this.comboBox6.TabIndex = 7;
             this.comboBox6.SelectedIndexChanged += new System.EventHandler(this.filter_changed);
             this.comboBox6.TextUpdate += new System.EventHandler(this.filter_changed);
             // 
@@ -311,7 +311,7 @@
             this.comboBox7.Location = new System.Drawing.Point(290, 282);
             this.comboBox7.Name = "comboBox7";
             this.comboBox7.Size = new System.Drawing.Size(140, 24);
-            this.comboBox7.TabIndex = 16;
+            this.comboBox7.TabIndex = 8;
             this.comboBox7.SelectedIndexChanged += new System.EventHandler(this.filter_changed);
             this.comboBox7.TextUpdate += new System.EventHandler(this.filter_changed);
             // 
@@ -324,7 +324,7 @@
             this.comboBox8.Location = new System.Drawing.Point(468, 282);
             this.comboBox8.Name = "comboBox8";
             this.comboBox8.Size = new System.Drawing.Size(139, 24);
-            this.comboBox8.TabIndex = 17;
+            this.comboBox8.TabIndex = 9;
             this.comboBox8.SelectedIndexChanged += new System.EventHandler(this.filter_changed);
             this.comboBox8.TextUpdate += new System.EventHandler(this.filter_changed);
             // 
@@ -337,7 +337,9 @@
             this.comboBox9.Location = new System.Drawing.Point(656, 282);
             this.comboBox9.Name = "comboBox9";
             this.comboBox9.Size = new System.Drawing.Size(145, 24);
-            this.comboBox9.TabIndex = 18;
+            this.comboBox9.TabIndex = 10;
+            this.comboBox9.SelectedIndexChanged += new System.EventHandler(this.filter_changed);
+            this.comboBox9.TextUpdate += new System.EventHandler(this.filter_changed);
             // 
             // label8
             // 
@@ -402,7 +404,7 @@
             this.comboBox10.Location = new System.Drawing.Point(821, 282);
             this.comboBox10.Name = "comboBox10";
             this.comboBox10.Size = new System.Drawing.Size(129, 24);
-            this.comboBox10.TabIndex = 24;
+            this.comboBox10.TabIndex = 11;
             this.comboBox10.SelectedIndexChanged += new System.EventHandler(this.filter_changed);
             this.comboBox10.TextUpdate += new System.EventHandler(this.filter_changed);
             // 
@@ -421,7 +423,7 @@
             this.dataGridView2.Name = "dataGridView2";
             this.dataGridView2.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dataGridView2.Size = new System.Drawing.Size(979, 93);
-            this.dataGridView2.TabIndex = 25;
+            this.dataGridView2.TabIndex = 13;
             // 
             // dataGridView3
             // 
@@ -438,7 +440,7 @@
             this.dataGridView3.Name = "dataGridView3";
             this.dataGridView3.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dataGridView3.Size = new System.Drawing.Size(982, 102);
-            this.dataGridView3.TabIndex = 26;
+            this.dataGridView3.TabIndex = 14;
             // 
             // menuStrip1
             // 
@@ -471,6 +473,50 @@
             this.adaugaClientToolStripMenuItem.Name = "adaugaClientToolStripMenuItem";
             this.adaugaClientToolStripMenuItem.Size = new System.Drawing.Size(120, 20);
             this.adaugaClientToolStripMenuItem.Text = "Operatii Clienti";
+            // 
+            // adaugaClientToolStripMenuItem1
+            // 
+            this.adaugaClientToolStripMenuItem1.Name = "adaugaClientToolStripMenuItem1";
+            this.adaugaClientToolStripMenuItem1.Size = new System.Drawing.Size(176, 22);
+            this.adaugaClientToolStripMenuItem1.Text = "Adauga Client";
+            this.adaugaClientToolStripMenuItem1.Click += new System.EventHandler(this.adaugaClientToolStripMenuItem_Click);
+            // 
+            // stergeClientToolStripMenuItem1
+            // 
+            this.stergeClientToolStripMenuItem1.Name = "stergeClientToolStripMenuItem1";
+            this.stergeClientToolStripMenuItem1.Size = new System.Drawing.Size(176, 22);
+            this.stergeClientToolStripMenuItem1.Text = "Sterge Client";
+            this.stergeClientToolStripMenuItem1.Click += new System.EventHandler(this.stergeClientToolStripMenuItem_Click);
+            // 
+            // modificaClientToolStripMenuItem
+            // 
+            this.modificaClientToolStripMenuItem.Name = "modificaClientToolStripMenuItem";
+            this.modificaClientToolStripMenuItem.Size = new System.Drawing.Size(176, 22);
+            this.modificaClientToolStripMenuItem.Text = "Modifica Client";
+            this.modificaClientToolStripMenuItem.Click += new System.EventHandler(this.modificaClientToolStripMenuItem_Click);
+            // 
+            // exportareToolStripMenuItem
+            // 
+            this.exportareToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.inEXCELToolStripMenuItem,
+            this.inPDFToolStripMenuItem});
+            this.exportareToolStripMenuItem.Name = "exportareToolStripMenuItem";
+            this.exportareToolStripMenuItem.Size = new System.Drawing.Size(82, 20);
+            this.exportareToolStripMenuItem.Text = "Exportare";
+            // 
+            // inEXCELToolStripMenuItem
+            // 
+            this.inEXCELToolStripMenuItem.Name = "inEXCELToolStripMenuItem";
+            this.inEXCELToolStripMenuItem.Size = new System.Drawing.Size(131, 22);
+            this.inEXCELToolStripMenuItem.Text = "In EXCEL";
+            this.inEXCELToolStripMenuItem.Click += new System.EventHandler(this.inEXCELToolStripMenuItem_Click);
+            // 
+            // inPDFToolStripMenuItem
+            // 
+            this.inPDFToolStripMenuItem.Name = "inPDFToolStripMenuItem";
+            this.inPDFToolStripMenuItem.Size = new System.Drawing.Size(131, 22);
+            this.inPDFToolStripMenuItem.Text = "In PDF";
+            this.inPDFToolStripMenuItem.Click += new System.EventHandler(this.inPDFToolStripMenuItem_Click);
             // 
             // ajutorToolStripMenuItem
             // 
@@ -636,8 +682,8 @@
             this.button4.BackColor = System.Drawing.Color.Transparent;
             this.button4.BackgroundImage = global::ProiectBD_InchiriereApartamente.Properties.Resources.GenericButton;
             this.button4.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.button4.Font = new System.Drawing.Font("Comic Sans MS", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button4.ForeColor = System.Drawing.Color.White;
+            this.button4.Font = new System.Drawing.Font("Comic Sans MS", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.button4.ForeColor = System.Drawing.Color.Crimson;
             this.button4.Location = new System.Drawing.Point(272, 91);
             this.button4.Name = "button4";
             this.button4.Size = new System.Drawing.Size(166, 31);
@@ -785,7 +831,7 @@
             this.comboBox15.Location = new System.Drawing.Point(561, 277);
             this.comboBox15.Name = "comboBox15";
             this.comboBox15.Size = new System.Drawing.Size(145, 24);
-            this.comboBox15.TabIndex = 53;
+            this.comboBox15.TabIndex = 49;
             this.comboBox15.SelectedIndexChanged += new System.EventHandler(this.Generic_SelectedIndexChanged);
             this.comboBox15.TextUpdate += new System.EventHandler(this.comboBox15_TextUpdate);
             // 
@@ -798,7 +844,7 @@
             this.comboBox16.Location = new System.Drawing.Point(373, 277);
             this.comboBox16.Name = "comboBox16";
             this.comboBox16.Size = new System.Drawing.Size(139, 24);
-            this.comboBox16.TabIndex = 52;
+            this.comboBox16.TabIndex = 48;
             this.comboBox16.SelectedIndexChanged += new System.EventHandler(this.Generic_SelectedIndexChanged);
             this.comboBox16.TextUpdate += new System.EventHandler(this.comboBox16_TextUpdate);
             // 
@@ -811,53 +857,9 @@
             this.comboBox17.Location = new System.Drawing.Point(195, 277);
             this.comboBox17.Name = "comboBox17";
             this.comboBox17.Size = new System.Drawing.Size(140, 24);
-            this.comboBox17.TabIndex = 51;
+            this.comboBox17.TabIndex = 47;
             this.comboBox17.SelectedIndexChanged += new System.EventHandler(this.Generic_SelectedIndexChanged);
             this.comboBox17.TextUpdate += new System.EventHandler(this.comboBox17_TextUpdate);
-            // 
-            // adaugaClientToolStripMenuItem1
-            // 
-            this.adaugaClientToolStripMenuItem1.Name = "adaugaClientToolStripMenuItem1";
-            this.adaugaClientToolStripMenuItem1.Size = new System.Drawing.Size(176, 22);
-            this.adaugaClientToolStripMenuItem1.Text = "Adauga Client";
-            this.adaugaClientToolStripMenuItem1.Click += new System.EventHandler(this.adaugaClientToolStripMenuItem_Click);
-            // 
-            // stergeClientToolStripMenuItem1
-            // 
-            this.stergeClientToolStripMenuItem1.Name = "stergeClientToolStripMenuItem1";
-            this.stergeClientToolStripMenuItem1.Size = new System.Drawing.Size(176, 22);
-            this.stergeClientToolStripMenuItem1.Text = "Sterge Client";
-            this.stergeClientToolStripMenuItem1.Click += new System.EventHandler(this.stergeClientToolStripMenuItem_Click);
-            // 
-            // modificaClientToolStripMenuItem
-            // 
-            this.modificaClientToolStripMenuItem.Name = "modificaClientToolStripMenuItem";
-            this.modificaClientToolStripMenuItem.Size = new System.Drawing.Size(176, 22);
-            this.modificaClientToolStripMenuItem.Text = "Modifica Client";
-            this.modificaClientToolStripMenuItem.Click += new System.EventHandler(this.modificaClientToolStripMenuItem_Click);
-            // 
-            // exportareToolStripMenuItem
-            // 
-            this.exportareToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.inEXCELToolStripMenuItem,
-            this.inPDFToolStripMenuItem});
-            this.exportareToolStripMenuItem.Name = "exportareToolStripMenuItem";
-            this.exportareToolStripMenuItem.Size = new System.Drawing.Size(82, 20);
-            this.exportareToolStripMenuItem.Text = "Exportare";
-            // 
-            // inEXCELToolStripMenuItem
-            // 
-            this.inEXCELToolStripMenuItem.Name = "inEXCELToolStripMenuItem";
-            this.inEXCELToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-            this.inEXCELToolStripMenuItem.Text = "In EXCEL";
-            this.inEXCELToolStripMenuItem.Click += new System.EventHandler(this.inEXCELToolStripMenuItem_Click);
-            // 
-            // inPDFToolStripMenuItem
-            // 
-            this.inPDFToolStripMenuItem.Name = "inPDFToolStripMenuItem";
-            this.inPDFToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-            this.inPDFToolStripMenuItem.Text = "In PDF";
-            this.inPDFToolStripMenuItem.Click += new System.EventHandler(this.inPDFToolStripMenuItem_Click);
             // 
             // UserForm
             // 

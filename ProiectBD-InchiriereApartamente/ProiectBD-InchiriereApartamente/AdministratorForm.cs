@@ -649,6 +649,7 @@ namespace ProiectBD_InchiriereApartamente
             }
         }
 
+            //trecerea de la o sursa de date la alta
         private void sursa_date(object sender, EventArgs e)     //alege sursa de date
         {
             DataTable tabel_ales = new DataTable();
@@ -897,18 +898,42 @@ namespace ProiectBD_InchiriereApartamente
         private void ajutorToolStripMenuItem_Click(object sender, EventArgs e)
         {
             MessageBox.Show(@"
-        Apasati pe (Apartamente....) 'LIBERE' pentru a vizualiza apartamentele libere,sau adresa apartamentelor libere,altfel pe 'OCUPATE'.
+        Apasati pe (Apartamente....) 'LIBERE' pentru a vizualiza apartamentele
+libere,sau adresa apartamentelor libere,altfel pe 'OCUPATE'.
         Alegeti Sursa de Date din casuta dreapta-sus.
-        Filtrarea se face in timp real,de indata ce se introduce text in casutele de filtrare.Apasati pe Sterge filtrele pentru a inlatura filtrele 
-dinaintea apasarii butonului de stergere a filtrelor.
-        Puteti sterge decat clienti,celelalte tabele putand fi decat vizualizate.
-        Pentru a sterge un client selectati-l printr-un click din tabel,apoi din bara de meniu,apasati 'Sterge Client'.Pentru a introduce un client
-apasati pe 'Adauga Client' din bara de meniu.Casutele care apar trebuie completate.Apoi dati click pe butonul 'Adauga client'.
+        Filtrarea se face in timp real,de indata ce se introduce text in
+casutele de filtrare. Apasati pe Sterge filtrele pentru a inlatura filtrele 
+din casute si de asupra tabelului.
+        Puteti opera decat asupra clientilor,apartamentelor,adreselor,
+conturilor,celelalte tabele putand fi decat vizualizate.
+        Pentru a sterge un client selectati-l printr-un click din tabel,
+apoi din bara de meniu,apasati 'Sterge Client'.Pentru a introduce un client 
+apasati pe 'Adauga Client' din bara de meniu.Apoi dati click pe butonul 
+'Adauga client'.Casuta 'ID Apartament' poate sa aiba valoarea 0 sau nimic
+(ambele pentru valoare nula),sau poate avea o valoare.Pentru a 
+modifica un client,apasati pe 'Modifica Client' din bara de meniu.Casuta
+ID Apartament poate nu avea nici o valoare(casuta e lasata goala,valoarea 
+este cea de dinaintea modificarii),poate avea valoarea '0'(din care va rezulta 
+valoare nula),sau orice alta valoare.
+       Idem celorlaltor tabele asupra carora se pot face operatii.Campurile
+mai speciale sunt : la adaugare apartament, FACILITATI(casuta poate fi lasata
+goala sau sa se puna 0 ,ambele pt valoare nula sau puteti introduce orice alta valoare),
+pe cand la modificare poate avea valoarea 0(adica nula),nici o valoare
+(valoare anterioara modificarii), sau orice alta valoare.
+       Pe acest tipar se completeaza si la celelalte cu mentiunea ca in tabelul
+Adrese,campurile speciale sunt BLOC,SCARA,ETAJ,NUMAR APARTAMENT,SECTOR.
+       Tabelul conturi nu are campuri speciale.
+        La adaugarea unui nou cont,rolul contului poate avea valoarea
+Administrator sau User!
+    OBS : unele campuri trebuie completate pe cand altele nu.CITITI IN
+AJUTOR MAI SUS PENTRU MAI MULTE DETALII.Data inregistrarii clientului 
+se va genera automat(va fi cea curenta).
 
-    OBS : toate campurile trebuiesc completate iar data inregistrarii clientului se va genera automat.
-
-    !!! : Daca va aflati in Apartamente sau Adrese puteti da click pe o celula din primul tabel pentru a vedea detaliile despre acel rand
-pe care ati dat click
+    !!! : Daca va aflati in Apartamente sau Adrese puteti da click pe o
+celula din primul tabel pentru a vedea detaliile despre acel rand
+pe care ati dat click(se va vedea in 3 tabele informatiile despre
+apartament,adresa apartamentului si clientii din apartament,daca va aflati
+in apartamentele ocupate).
 ");
         }
 
@@ -1033,7 +1058,7 @@ pe care ati dat click
                     spp[0].Value = Convert.ToInt32(richTextBox1.Text);
                     spp[0].Direction = ParameterDirection.Input;
                 }
-                else if (richTextBox1.Text == "")
+                else if (richTextBox1.Text == "0" || richTextBox1.Text == "")
                 {
                     spp[0].ParameterName = "@ID_APARTAMENT";
                     spp[0].SqlDbType = SqlDbType.Int;
@@ -1412,11 +1437,7 @@ pe care ati dat click
 
                 RandSelectat = -1;
 
-                DataTable n = new DataTable();
-                n = b.read_table("Apartamente");
-                n.TableName = "Apartamente";
-                dvSursa.Table = n;
-                dataGridView1.DataSource = dvSursa;
+                filter_changed(sender, e);
 
               
             }
@@ -1546,19 +1567,179 @@ pe care ati dat click
 
                 RandSelectat = -1;
 
-                DataTable n = new DataTable();
-                n = b.read_table("Adresa");
-                n.TableName = "Adrese";
-                dvSursa.Table = n;
-                dataGridView1.DataSource = dvSursa;
+                filter_changed(sender, e);
 
             }
-            richTextBox1.Text = richTextBox2.Text = richTextBox3.Text = richTextBox4.Text = richTextBox5.Text = richTextBox6.Text = richTextBox7.Text = richTextBox8.Text ="";
+            else if (button3.Text == "Adauga Adresa")
+            {
+                string oras = "", strada = "", numar = "";
+                if (richTextBox1.Text == "" || richTextBox2.Text == "" || richTextBox3.Text == "")
+                {
+                    MessageBox.Show("Camp lasat necompletat,incercati din nou", "Eroare", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+                SqlParameter[] spp = new SqlParameter[9];
+                for (int i = 0; i < 9; i++)
+                    spp[i] = new SqlParameter();
 
-            button3.Visible = label13.Visible = false;
+                oras = richTextBox1.Text;
+                strada = richTextBox2.Text;
+                numar = richTextBox3.Text;
 
-            richTextBox1.Visible = richTextBox2.Visible = richTextBox3.Visible = richTextBox4.Visible = richTextBox5.Visible = richTextBox6.Visible = richTextBox7.Visible = richTextBox8.Visible =false;
-            label14.Visible = label15.Visible = label16.Visible = label17.Visible = label18.Visible = label19.Visible = label27.Visible = label28.Visible = false;
+                spp[0].ParameterName = "@ORAS";
+                spp[0].SqlDbType = SqlDbType.VarChar;
+                spp[0].Direction = ParameterDirection.Input;
+                spp[0].Value = oras;
+
+                spp[1].ParameterName = "@STRADA";
+                spp[1].SqlDbType = SqlDbType.VarChar;
+                spp[1].Direction = ParameterDirection.Input;
+                spp[1].Value = strada;
+
+                spp[2].ParameterName = "@NUMAR";
+                spp[2].SqlDbType = SqlDbType.VarChar;
+                spp[2].Direction = ParameterDirection.Input;
+                spp[2].Value = numar;
+
+                spp[3].ParameterName = "@BLOC";
+                spp[3].SqlDbType = SqlDbType.VarChar;
+                spp[3].Direction = ParameterDirection.Input;
+                if (richTextBox4.Text == "" || richTextBox4.Text == "0")
+                    spp[3].Value = DBNull.Value;
+                else spp[3].Value = richTextBox4.Text;
+
+                spp[4].ParameterName = "@SCARA";
+                spp[4].SqlDbType = SqlDbType.VarChar;
+                spp[4].Direction = ParameterDirection.Input;
+                if (richTextBox5.Text == "" || richTextBox5.Text == "0")
+                    spp[4].Value = DBNull.Value;
+                else spp[4].Value = richTextBox5.Text;
+
+                spp[5].ParameterName = "@ETAJ";
+                spp[5].SqlDbType = SqlDbType.VarChar;
+                spp[5].Direction = ParameterDirection.Input;
+                if (richTextBox6.Text == "" || richTextBox6.Text == "0")
+                    spp[5].Value = DBNull.Value;
+                else spp[5].Value = richTextBox6.Text;
+
+                spp[6].ParameterName = "@NUMAR_APARTAMENT";
+                spp[6].SqlDbType = SqlDbType.VarChar;
+                spp[6].Direction = ParameterDirection.Input;
+                if (richTextBox7.Text == "" || richTextBox7.Text == "0")
+                    spp[6].Value = DBNull.Value;
+                else spp[6].Value = richTextBox7.Text;
+
+                spp[7].ParameterName = "@SECTOR";
+                spp[7].SqlDbType = SqlDbType.VarChar;
+                spp[7].Direction = ParameterDirection.Input;
+                if (richTextBox8.Text == "" || richTextBox8.Text == "0")
+                    spp[7].Value = DBNull.Value;
+                else spp[7].Value = richTextBox8.Text;
+
+                spp[8].ParameterName = "@username_context";
+                spp[8].SqlDbType = SqlDbType.VarChar;
+                spp[8].Direction = ParameterDirection.Input;
+                spp[8].Value = Username;
+
+                try
+                {
+                    b.DataBaseOperation("AdaugaAdresa", spp);
+                    MessageBox.Show("Adresa apartamentului a fost adaugata");
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Operatia nu a putut fi realizata", "Eroare", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+
+                filter_changed(sender, e);
+
+                RandSelectat = -1;
+                MessageBox.Show("In momentul acesta introduceti detaliile apartamentului", "Atentie", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                button3.Text = "Adauga Apartamentul";
+                label13.Text = "Introduceti datele apartamentului";
+
+                label14.Text = "Numar camere"; label15.Text = "Suprafata utila"; label16.Text = "An constructie"; label17.Text = "Facilitati"; label18.Text = "Pret inchiriere"; 
+                label19.Visible =  label27.Visible = label28.Visible = false;
+                richTextBox6.Visible = richTextBox7.Visible = richTextBox8.Visible = false;
+
+                richTextBox1.Text = richTextBox2.Text = richTextBox3.Text = richTextBox4.Text = richTextBox5.Text = richTextBox6.Text = richTextBox7.Text = richTextBox8.Text = "";
+                
+            }
+            else if (button3.Text == "Adauga Apartamentul")
+            {
+                if (richTextBox1.Text == "" || richTextBox2.Text == "" || richTextBox3.Text == "" || richTextBox5.Text == "")
+                {
+                    MessageBox.Show("Camp lasat necompletat,incercati din nou", "Eroare", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+                int id_adresa = b.GetLastAddress();
+
+                SqlParameter[] spp = new SqlParameter[7];
+                for (int i = 0; i < 7; i++)
+                    spp[i] = new SqlParameter();
+
+                spp[0].ParameterName = "@ID_ADRESA";
+                spp[0].SqlDbType = SqlDbType.Int;
+                spp[0].Direction = ParameterDirection.Input;
+                spp[0].Value = id_adresa;
+
+                spp[1].ParameterName = "@NUMAR_CAMERE";
+                spp[1].SqlDbType = SqlDbType.Int;
+                spp[1].Direction = ParameterDirection.Input;
+                spp[1].Value = Convert.ToInt32(richTextBox1.Text);
+
+                spp[2].ParameterName = "@SUPRAFATA_UTILA";
+                spp[2].SqlDbType = SqlDbType.Int;
+                spp[2].Direction = ParameterDirection.Input;
+                spp[2].Value = Convert.ToInt32(richTextBox2.Text);
+
+                spp[3].ParameterName = "@AN_CONSTRUCTIE";
+                spp[3].SqlDbType = SqlDbType.Int;
+                spp[3].Direction = ParameterDirection.Input;
+                spp[3].Value = Convert.ToInt32(richTextBox3.Text);
+
+                spp[4].ParameterName = "@FACILITATI" ;
+                spp[4].SqlDbType = SqlDbType.VarChar;
+                spp[4].Direction = ParameterDirection.Input;
+                if (richTextBox4.Text =="" || richTextBox4.Text=="0")
+                    spp[4].Value = DBNull.Value;
+                else spp[4].Value = richTextBox4.Text;
+
+                spp[5].ParameterName = "@PRET_INCHIRIERE";
+                spp[5].SqlDbType = SqlDbType.Int;
+                spp[5].Direction = ParameterDirection.Input;
+                spp[5].Value = Convert.ToInt32(richTextBox5.Text);
+
+                spp[6].ParameterName = "@username_context";
+                spp[6].SqlDbType = SqlDbType.VarChar;
+                spp[6].Direction = ParameterDirection.Input;
+                spp[6].Value = Username;
+
+                try
+                {
+                    b.DataBaseOperation("AdaugaApartament", spp);
+                    MessageBox.Show("Apartamentul a fost adaugat");
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Operatia nu a putut fi realizata", "Eroare", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+
+                filter_changed(sender, e);
+
+                button3.Text = "NONE";
+                RandSelectat = -1;
+            }
+            if (button3.Text != "Adauga Apartamentul")  //trec peste bucata asta de cod atunci cand trec de la adauga adresa la adauga apartament
+            {
+                richTextBox1.Text = richTextBox2.Text = richTextBox3.Text = richTextBox4.Text = richTextBox5.Text = richTextBox6.Text = richTextBox7.Text = richTextBox8.Text = "";
+
+                button3.Visible = label13.Visible = false;
+
+                richTextBox1.Visible = richTextBox2.Visible = richTextBox3.Visible = richTextBox4.Visible = richTextBox5.Visible = richTextBox6.Visible = richTextBox7.Visible = richTextBox8.Visible = false;
+                label14.Visible = label15.Visible = label16.Visible = label17.Visible = label18.Visible = label19.Visible = label27.Visible = label28.Visible = false;
+            }
         }
 
         private void button4_Click(object sender, EventArgs e)  //butonul de stergere filtre
@@ -1568,10 +1749,13 @@ pe care ati dat click
 
             comboBox11.Text = comboBox12.Text = comboBox13.Text = comboBox14.Text = comboBox15.Text = comboBox16.Text = comboBox17.Text = "";
 
-            // DE COMPLETAT
-            dvSursa.RowFilter = "";
+            if(comboBox5.Text == "Apartamente" || comboBox5.Text == "Adrese")
+                filter_changed(sender, e);
+            else dvSursa.RowFilter = "";
+           
         }
 
+           //clientii auditul si conturile filtrate dupa o metoda,restul tabelelor dupa alta metoda
         private void SearchingForEntries(object sender, EventArgs e)
         {
             if (comboBox5.Text == "Clienti")
@@ -1603,6 +1787,495 @@ pe care ati dat click
             {
                 dvSursa.RowFilter = String.Format("NUME_ROL LIKE '{0}*' AND NUME_USER LIKE '{1}*'", comboBox14.Text, comboBox13.Text);
             }
+        }
+
+
+
+
+
+
+
+        private void comboBox14_TextUpdate(object sender, EventArgs e)
+        {
+            // Sterg toate optiunile pe care userul le poate alege atunci cand apasa pe sagetuta combobox-ului
+            // pentru a le putea reface dupa fiecare modificare a textului din combobox.
+            if (comboBox5.Text != "Clienti" && comboBox5.Text != "Audit" && comboBox5.Text != "Conturi")
+                return;
+            comboBox14.Items.Clear();
+            if (comboBox14.Text != "")
+            {
+                // Formez optiunile combobox-ului prin parcurgerea dataview-ului.
+                foreach (DataRowView drv in dvSursa)
+                {
+                    string str = "";
+                    if (comboBox5.Text == "Clienti")
+                        str = Convert.ToString(drv[1]);
+                    else if (comboBox5.Text == "Audit")
+                        str = Convert.ToString(drv[1]);
+                    else if (comboBox5.Text == "Conturi")
+                        str = Convert.ToString(drv[3]);
+                    if (String.Compare(comboBox14.Text, 0, str, 0, comboBox14.Text.Length, false) == 0)
+                        comboBox14.Items.Add(str);
+                }
+            }
+            // Pozitionez caret-ul la finalul textului.
+            comboBox14.Select(comboBox14.Text.Length, 0);
+            this.SearchingForEntries(sender, e);
+        }
+        private void comboBox13_TextUpdate(object sender, EventArgs e)
+        {
+            // Sterg toate optiunile pe care userul le poate alege atunci cand apasa pe sagetuta combobox-ului
+            // pentru a le putea reface dupa fiecare modificare a textului din combobox.
+            if (comboBox5.Text != "Clienti" && comboBox5.Text != "Audit" && comboBox5.Text != "Conturi")
+                return;
+            comboBox13.Items.Clear();
+            if (comboBox13.Text != "")
+            {
+                // Formez optiunile combobox-ului prin parcurgerea dataview-ului.
+                foreach (DataRowView drv in dvSursa)
+                {
+                    string str = "";
+                    if (comboBox5.Text == "Clienti")
+                        str = Convert.ToString(drv[2]);
+                    else if (comboBox5.Text == "Audit")
+                        str = Convert.ToString(drv[2]);
+                    else if (comboBox5.Text == "Conturi")
+                        str = Convert.ToString(drv[1]);
+                    if (String.Compare(comboBox13.Text, 0, str, 0, comboBox13.Text.Length, false) == 0)
+                        comboBox13.Items.Add(str);
+                }
+            }
+            // Pozitionez caret-ul la finalul textului.
+            comboBox13.Select(comboBox13.Text.Length, 0);
+            this.SearchingForEntries(sender, e);
+        }
+        private void comboBox12_TextUpdate(object sender, EventArgs e)
+        {
+            // Sterg toate optiunile pe care userul le poate alege atunci cand apasa pe sagetuta combobox-ului
+            // pentru a le putea reface dupa fiecare modificare a textului din combobox.
+            if (comboBox5.Text != "Clienti" && comboBox5.Text != "Audit")
+                return;
+            comboBox12.Items.Clear();
+            if (comboBox12.Text != "")
+            {
+                // Formez optiunile combobox-ului prin parcurgerea dataview-ului.
+                foreach (DataRowView drv in dvSursa)
+                {
+                    string str = "";
+                    if (comboBox5.Text == "Clienti")
+                        str = Convert.ToString(drv[3]);
+                    else if (comboBox5.Text == "Audit")
+                        str = Convert.ToString(drv[3]);
+                    if (String.Compare(comboBox12.Text, 0, str, 0, comboBox12.Text.Length, false) == 0)
+                        comboBox12.Items.Add(str);
+                }
+            }
+            // Pozitionez caret-ul la finalul textului.
+            comboBox12.Select(comboBox12.Text.Length, 0);
+            this.SearchingForEntries(sender, e);
+        }
+        private void comboBox11_TextUpdate(object sender, EventArgs e)
+        {
+            // Sterg toate optiunile pe care userul le poate alege atunci cand apasa pe sagetuta combobox-ului
+            // pentru a le putea reface dupa fiecare modificare a textului din combobox.
+            if (comboBox5.Text != "Clienti" && comboBox5.Text != "Audit")
+                return;
+            comboBox11.Items.Clear();
+            if (comboBox11.Text != "")
+            {
+                // Formez optiunile combobox-ului prin parcurgerea dataview-ului.
+                foreach (DataRowView drv in dvSursa)
+                {
+                    string str = "";
+                    if (comboBox5.Text == "Clienti")
+                        str = Convert.ToString(drv[4]);
+                    else if (comboBox5.Text == "Audit")
+                        str = Convert.ToString(drv[6]);
+                    if (String.Compare(comboBox11.Text, 0, str, 0, comboBox11.Text.Length, false) == 0)
+                        comboBox11.Items.Add(str);
+                }
+            }
+            // Pozitionez caret-ul la finalul textului.
+            comboBox11.Select(comboBox11.Text.Length, 0);
+            this.SearchingForEntries(sender, e);
+        }
+        private void comboBox17_TextUpdate(object sender, EventArgs e)
+        {
+            // Sterg toate optiunile pe care userul le poate alege atunci cand apasa pe sagetuta combobox-ului
+            // pentru a le putea reface dupa fiecare modificare a textului din combobox.
+            if (comboBox5.Text != "Clienti" && comboBox5.Text != "Audit")
+                return;
+            comboBox17.Items.Clear();
+            if (comboBox17.Text != "")
+            {
+                // Formez optiunile combobox-ului prin parcurgerea dataview-ului.
+                foreach (DataRowView drv in dvSursa)
+                {
+                    string str = "";
+                    if (comboBox5.Text == "Clienti")
+                        str = Convert.ToString(drv[5]);
+                    else if (comboBox5.Text == "Audit")
+                    {
+                        comboBox17.Select(comboBox17.Text.Length, 0);
+                        return;
+                    }
+                    if (String.Compare(comboBox17.Text, 0, str, 0, comboBox17.Text.Length, false) == 0)
+                        comboBox17.Items.Add(str);
+                }
+            }
+            // Pozitionez caret-ul la finalul textului.
+            comboBox17.Select(comboBox17.Text.Length, 0);
+            this.SearchingForEntries(sender, e);
+        }
+        private void comboBox16_TextUpdate(object sender, EventArgs e)
+        {
+            // Sterg toate optiunile pe care userul le poate alege atunci cand apasa pe sagetuta combobox-ului
+            // pentru a le putea reface dupa fiecare modificare a textului din combobox.
+            if (comboBox5.Text != "Clienti" && comboBox5.Text != "Audit")
+                return;
+            comboBox16.Items.Clear();
+            if (comboBox16.Text != "")
+            {
+                // Formez optiunile combobox-ului prin parcurgerea dataview-ului.
+                foreach (DataRowView drv in dvSursa)
+                {
+                    string str = "";
+                    if (comboBox5.Text == "Clienti")
+                        str = Convert.ToString(drv[6]);
+                    else if (comboBox5.Text == "Audit")
+                    {
+                        comboBox16.Select(comboBox16.Text.Length, 0);
+                        return;
+                    }
+                    if (String.Compare(comboBox16.Text, 0, str, 0, comboBox16.Text.Length, false) == 0)
+                        comboBox16.Items.Add(str);
+                }
+            }
+            // Pozitionez caret-ul la finalul textului.
+            comboBox16.Select(comboBox16.Text.Length, 0);
+            this.SearchingForEntries(sender, e);
+        }
+        private void comboBox15_TextUpdate(object sender, EventArgs e)
+        {
+            // Sterg toate optiunile pe care userul le poate alege atunci cand apasa pe sagetuta combobox-ului
+            // pentru a le putea reface dupa fiecare modificare a textului din combobox.
+            if (comboBox5.Text != "Clienti" && comboBox5.Text != "Audit")
+                return;
+            comboBox15.Items.Clear();
+            if (comboBox15.Text != "")
+            {
+                // Formez optiunile combobox-ului prin parcurgerea dataview-ului.
+                foreach (DataRowView drv in dvSursa)
+                {
+                    string str = "";
+                    if (comboBox5.Text == "Clienti")
+                        str = Convert.ToString(drv[7]);
+                    else if (comboBox5.Text == "Audit")
+                    {
+                        comboBox15.Select(comboBox15.Text.Length, 0);
+                        return;
+                    }
+                    if (String.Compare(comboBox15.Text, 0, str, 0, comboBox15.Text.Length, false) == 0)
+                        comboBox15.Items.Add(str);
+                }
+            }
+            // Pozitionez caret-ul la finalul textului.
+            comboBox15.Select(comboBox15.Text.Length, 0);
+            this.SearchingForEntries(sender, e);
+        }
+
+        private void Generic_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            this.SearchingForEntries(sender, e);
+        }
+
+        private void inEXCELToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (comboBox5.Text == "Clienti")
+            {
+                b.ExportToExcel(dataGridView1, "Clienti");
+                MessageBox.Show("Lista cu clientii a fost exportata cu succes in Excel");
+            }
+            else if (comboBox5.Text == "Apartamente")
+            {
+                if (ok1 == 1 && ok2 == 0)
+                {
+                    b.ExportToExcel(dataGridView1, "ApartamenteLibere");
+                    MessageBox.Show("Lista cu apartamentele libere a fost exportata cu succes in Excel");
+                }
+                else if (ok1 == 0 && ok2 == 1)
+                {
+                    b.ExportToExcel(dataGridView1, "ApartamenteOcupate");
+                    MessageBox.Show("Lista cu apartamentele ocupate a fost exportata cu succes in Excel");
+                }
+                else MessageBox.Show("Selectati tipul de apartamente : Libere sau Ocupate");
+            }
+            else if (comboBox5.Text == "Adrese")
+            {
+                b.ExportToExcel(dataGridView1, "Adrese");
+                MessageBox.Show("Lista cu adresele apartamentelor a fost exportata cu succes in Excel");
+            }
+            else if (comboBox5.Text == "Audit")
+            {
+                b.ExportToExcel(dataGridView1, "Audit");
+                MessageBox.Show("Auditul a fost exportat cu succes in Excel");
+            }
+            else if (comboBox5.Text == "Conturi")
+            {
+                b.ExportToExcel(dataGridView1, "Conturi");
+                MessageBox.Show("Lista cu conturile a fost exportata cu succes in Excel");
+            }
+        }
+
+        private void inPDFToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (comboBox5.Text == "Clienti")
+            {
+                b.ExportToPDF(dataGridView1, "Clienti");
+                MessageBox.Show("Lista cu clientii a fost exportata cu succes in PDF");
+            }
+            else if (comboBox5.Text == "Apartamente")
+            {
+                if (ok1 == 1 && ok2 == 0)
+                {
+                    b.ExportToPDF(dataGridView1, "ApartamenteLibere");
+                    MessageBox.Show("Lista cu apartamentele libere a fost exportata cu succes in PDF");
+                }
+                else if (ok1 == 0 && ok2 == 1)
+                {
+                    b.ExportToPDF(dataGridView1, "ApartamenteOcupate");
+                    MessageBox.Show("Lista cu apartamentele ocupate a fost exportata cu succes in PDF");
+                }
+                else MessageBox.Show("Selectati tipul de apartamente : Libere sau Ocupate");
+            }
+            else if (comboBox5.Text == "Adrese")
+            {
+                b.ExportToPDF(dataGridView1, "Adrese");
+                MessageBox.Show("Lista cu adresele apartamentelor a fost exportata cu succes in PDF");
+            }
+            else if (comboBox5.Text == "Audit")
+            {
+                b.ExportToPDF(dataGridView1, "Audit");
+                MessageBox.Show("Auditul a fost exportat cu succes in PDF");
+            }
+            else if (comboBox5.Text == "Conturi")
+            {
+                b.ExportToPDF(dataGridView1, "Conturi");
+                MessageBox.Show("Lista cu conturile a fost exportata cu succes in PDF");
+            }
+        }
+
+        private void adaugaContToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (comboBox5.Text != "Conturi")
+            {
+                MessageBox.Show("Intai selectati tabelul Conturi", "Atentie", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            label13.Text = "Introduceti datele despre cont";
+
+            //facem vizibil butonul de insert
+            button3.Text = "Adauga Cont";
+            button3.Visible = true;
+            //modific numele etichetelor
+            label14.Text = "Nume Rol"; label15.Text = "Nume Cont"; label16.Text = "Parola";
+            //ascund ce nu am nevoie
+            label27.Visible = label28.Visible = richTextBox7.Visible = richTextBox8.Visible = false;
+
+            button4.Visible = false;
+            label13.Visible = true;
+            label2.Visible = false;
+            richTextBox1.Visible = richTextBox2.Visible = richTextBox3.Visible = true; richTextBox4.Visible = richTextBox5.Visible = richTextBox6.Visible = false;
+            label14.Visible = label15.Visible = label16.Visible = true; label17.Visible = label18.Visible = label19.Visible = false;
+
+            comboBox14.Visible = comboBox13.Visible = label23.Visible = label22.Visible = false;
+
+        }
+
+        private void stergeContToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (comboBox5.Text != "Conturi")
+            {
+                MessageBox.Show("Intai selectati tabelul Conturi", "Atentie", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+            if (RandSelectat < 0)
+            {
+                MessageBox.Show("Intai selectati un cont", "Atentie", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+            SqlParameter[] spp = new SqlParameter[2];
+            spp[0] = new SqlParameter();
+            spp[1] = new SqlParameter();
+
+            DataGridViewRow dgvr = dataGridView1.Rows[RandSelectat];
+
+            spp[0].ParameterName = "@ID_CONT";
+            spp[0].SqlDbType = SqlDbType.Int;
+            spp[0].Value = Convert.ToInt32(dgvr.Cells["ID_CONT"].Value);
+            spp[0].Direction = ParameterDirection.Input;
+
+            spp[1].ParameterName = "@username_context";
+            spp[1].SqlDbType = SqlDbType.VarChar;
+            spp[1].Value = Username;
+            spp[1].Direction = ParameterDirection.Input;
+
+            b.DataBaseOperation("StergeCont", spp);
+            MessageBox.Show("Contul selectat a fost sters");
+            RandSelectat = -1;
+
+            DataTable n = new DataTable();
+            n = b.GetTablesWithRelationships("AfiseazaConturi", null);
+            n.TableName = "Conturi";
+            dvSursa.Table = n;
+            dataGridView1.DataSource = dvSursa;
+
+            button4.Visible = true;
+            label13.Visible = false;
+            button3.Visible = false;
+            richTextBox1.Visible = richTextBox2.Visible = richTextBox3.Visible = richTextBox4.Visible = richTextBox5.Visible = richTextBox6.Visible = false;
+            label14.Visible = label15.Visible = label16.Visible = label17.Visible = label18.Visible = label19.Visible = false;
+
+            richTextBox1.Text = richTextBox2.Text = richTextBox3.Text = richTextBox4.Text = richTextBox5.Text = richTextBox6.Text = "";
+        }
+
+        private void modificaApartamentToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (comboBox5.Text != "Apartamente")
+            {
+                MessageBox.Show("Intai selectati tabelul Apartamente", "Atentie", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+            label14.Text = "Numar Camere"; label15.Text = "Suprafata Utila"; label16.Text = "An Constructie"; label17.Text = "Facilitati"; label18.Text = "Pret Inchiriere";
+            richTextBox6.Visible = richTextBox7.Visible = richTextBox8.Visible = label19.Visible = label27.Visible = label28.Visible = false;
+
+            button3.Text = "Modifica Apartament";
+
+            label13.Visible = true;
+            button3.Visible = true;
+            richTextBox1.Visible = richTextBox2.Visible = richTextBox3.Visible = richTextBox4.Visible = richTextBox5.Visible = true;
+            label14.Visible = label15.Visible = label16.Visible = label17.Visible = label18.Visible = true;
+
+            label2.Visible = false;
+            comboBox11.Visible = comboBox12.Visible = comboBox13.Visible = comboBox14.Visible = comboBox15.Visible = comboBox16.Visible = comboBox17.Visible = false;
+            label20.Visible = label21.Visible = label22.Visible = label23.Visible = label24.Visible = label25.Visible = label26.Visible = false;
+
+
+        }
+
+        private void modificaAdresaToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (comboBox5.Text != "Adrese")
+            {
+                MessageBox.Show("Intai selectati tabelul Adrese", "Atentie", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+            label14.Text = "Oras"; label15.Text = "Strada"; label16.Text = "Numar"; label17.Text = "Bloc"; label18.Text = "Scara"; label19.Text = "Etaj"; label27.Text = "Numar apartament"; label28.Text = "Sector";
+
+            button3.Text = "Modifica Adresa";
+
+            label13.Visible = true;
+            button3.Visible = true;
+            richTextBox1.Visible = richTextBox2.Visible = richTextBox3.Visible = richTextBox4.Visible = richTextBox5.Visible = richTextBox6.Visible = richTextBox7.Visible = richTextBox8.Visible = true;
+            label14.Visible = label15.Visible = label16.Visible = label17.Visible = label18.Visible = label19.Visible = label27.Visible = label28.Visible = true;
+
+            label2.Visible = false;
+            comboBox11.Visible = comboBox12.Visible = comboBox13.Visible = comboBox14.Visible = comboBox15.Visible = comboBox16.Visible = comboBox17.Visible = false;
+            label20.Visible = label21.Visible = label22.Visible = label23.Visible = label24.Visible = label25.Visible = label26.Visible = false;
+
+        }
+
+        private void adaugaToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            //ca sa adaugam un apartament+adresa nou,incepem din adresa intai si dupaia adaugam si apartamentul
+            if (comboBox5.Text != "Adrese")
+            {
+                MessageBox.Show("Intai selectati tabelul Adrese", "Atentie", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+            label14.Text = "Oras"; label15.Text = "Strada"; label16.Text = "Numar"; label17.Text = "Bloc"; label18.Text = "Scara"; label19.Text = "Etaj"; label27.Text = "Numar apartament"; label28.Text = "Sector";
+
+            button3.Text = "Adauga Adresa";
+            label13.Text = "Introduceti datele despre adresa";
+
+            label13.Visible = true;
+            button3.Visible = true;
+            richTextBox1.Visible = richTextBox2.Visible = richTextBox3.Visible = richTextBox4.Visible = richTextBox5.Visible = richTextBox6.Visible = richTextBox7.Visible = richTextBox8.Visible = true;
+            label14.Visible = label15.Visible = label16.Visible = label17.Visible = label18.Visible = label19.Visible = label27.Visible = label28.Visible = true;
+
+            label2.Visible = false;
+            comboBox11.Visible = comboBox12.Visible = comboBox13.Visible = comboBox14.Visible = comboBox15.Visible = comboBox16.Visible = comboBox17.Visible = false;
+            label20.Visible = label21.Visible = label22.Visible = label23.Visible = label24.Visible = label25.Visible = label26.Visible = false;
+
+        }
+
+        private void stergeToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (comboBox5.Text != "Apartamente" && comboBox5.Text != "Adrese")
+            {
+                MessageBox.Show("Intai selectati tabelul Apartamente sau tabelul Adrese", "Atentie", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+            if (RandSelectat < 0)
+            {
+                MessageBox.Show("Intai selectati un apartament sau adresa", "Atentie", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+            int id_adresa = -1;
+            int id_apartament = -1;
+            if (comboBox5.Text == "Apartamente")
+            {
+                id_apartament = Convert.ToInt32(dataGridView1.Rows[RandSelectat].Cells["ID_APARTAMENT"].Value);
+                id_adresa = Convert.ToInt32(dataGridView1.Rows[RandSelectat].Cells["ID_ADRESA"].Value);
+            }
+            else if (comboBox5.Text == "Adrese")
+            {
+                id_adresa = Convert.ToInt32(dataGridView1.Rows[RandSelectat].Cells["ID_ADRESA"].Value);
+                id_apartament = b.GetApartmentIdByAddressId(id_adresa);
+            }
+            //stergem intai apartamentul si dupaia adresa
+            SqlParameter[] spp1 = new SqlParameter[2];
+            spp1[0] = new SqlParameter();
+            spp1[1] = new SqlParameter();
+
+            SqlParameter[] spp2 = new SqlParameter[2];
+            spp2[0] = new SqlParameter();
+            spp2[1] = new SqlParameter();
+
+            spp1[0].ParameterName = "@ID_APARTAMENT";
+            spp1[0].SqlDbType = SqlDbType.Int;
+            spp1[0].Value = id_apartament;
+            spp1[0].Direction = ParameterDirection.Input;
+
+            spp1[1].ParameterName = "@username_context";
+            spp1[1].SqlDbType = SqlDbType.VarChar;
+            spp1[1].Value = Username;
+            spp1[1].Direction = ParameterDirection.Input;
+
+            spp2[0].ParameterName = "@ID_ADRESA";
+            spp2[0].SqlDbType = SqlDbType.Int;
+            spp2[0].Value = id_adresa;
+            spp2[0].Direction = ParameterDirection.Input;
+
+            spp2[1].ParameterName = "@username_context";
+            spp2[1].SqlDbType = SqlDbType.VarChar;
+            spp2[1].Value = Username;
+            spp2[1].Direction = ParameterDirection.Input;
+
+            b.DataBaseOperation("StergeApartament", spp1);
+            b.DataBaseOperation("StergeAdresa", spp2);
+            RandSelectat = -1;
+
+            //refacem sursa
+            filter_changed(sender, e);
+
+            MessageBox.Show("Apartamentul cu adresa aferenta a a fost stearsa");
+        }
+
+        private void AdministratorForm_Load(object sender, EventArgs e)
+        {
+
         }
     }
 }

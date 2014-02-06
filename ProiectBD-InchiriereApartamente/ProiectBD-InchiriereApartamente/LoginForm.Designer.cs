@@ -58,7 +58,7 @@
             // tbParola
             // 
             this.tbParola.BackColor = System.Drawing.Color.Goldenrod;
-            this.tbParola.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
+            this.tbParola.ForeColor = System.Drawing.Color.Red;
             this.tbParola.Location = new System.Drawing.Point(392, 253);
             this.tbParola.Name = "tbParola";
             this.tbParola.PasswordChar = '*';
@@ -68,7 +68,7 @@
             // rtbUsername
             // 
             this.rtbUsername.BackColor = System.Drawing.Color.Goldenrod;
-            this.rtbUsername.ForeColor = System.Drawing.SystemColors.HighlightText;
+            this.rtbUsername.ForeColor = System.Drawing.Color.Red;
             this.rtbUsername.Location = new System.Drawing.Point(392, 147);
             this.rtbUsername.Name = "rtbUsername";
             this.rtbUsername.Size = new System.Drawing.Size(150, 27);
